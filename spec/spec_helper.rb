@@ -38,6 +38,13 @@ module ActiveSupport
   end
 end
 
+# Add present? method for testing
+class Object
+  def present?
+    !nil? && !(respond_to?(:empty?) && empty?)
+  end
+end
+
 class ApplicationController
   def self.helper(mod)
     # no-op for testing

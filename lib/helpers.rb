@@ -21,16 +21,6 @@ module ChobbleForms
       [resolved[:value], resolved[:prefilled]]
     end
 
-    def format_numeric_value(value)
-      if value.is_a?(String) &&
-          value.match?(/\A-?\d*\.?\d+\z/) &&
-          !value.include?(".")
-        value.to_i
-      else
-        value
-      end
-    end
-
     def comment_field_options(form, comment_field, base_field_label)
       raise ArgumentError, "form_object required" unless form
       model = form.object

@@ -25,13 +25,6 @@ RSpec.describe ChobbleForms do
       end
     end
 
-    # Mock for ActiveSupport present? method
-    class Object
-      def present?
-        !nil? && !(respond_to?(:empty?) && empty?)
-      end
-    end
-
     let(:helper) { dummy_class.new }
     let(:form) { double("form", object: model) }
     let(:model) { double("model") }
