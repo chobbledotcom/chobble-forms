@@ -1,6 +1,6 @@
 require "spec_helper"
 require "action_view"
-require "chobble/forms/helpers"
+require "helpers"
 
 RSpec.describe ChobbleForms::Helpers do
   # Create a test class that includes the helpers

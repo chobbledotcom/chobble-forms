@@ -1,4 +1,5 @@
 .gems/
 .direnv/
+spec/examples.txt
 .envrc
 .rspec_status
