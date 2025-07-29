@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description = "A Rails engine for semantic HTML forms with enforced internationalization. Provides reusable form components with built-in accessibility, validation states, and strict i18n requirements."
   spec.homepage = "https://github.com/chobbledotcom/chobble-forms"
   spec.license = "AGPL-3.0-or-later"
-  spec.required_ruby_version = ">= 3.2.0"
+  spec.required_ruby_version = ">= 3.2.0", "< 3.5"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
   spec.metadata["homepage_uri"] = spec.homepage
