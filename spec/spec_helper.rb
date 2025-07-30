@@ -51,7 +51,7 @@ class ApplicationController
   end
 end
 
-require "chobble_forms"
+require "chobble-forms"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
