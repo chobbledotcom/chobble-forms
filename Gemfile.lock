@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    chobble-forms (0.3.3)
+    chobble-forms (0.3.4)
       rails (>= 7.0.0)
 
 GEM
