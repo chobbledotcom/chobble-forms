@@ -1,0 +1,24 @@
+<%
+  # Turbo response partial for file fields
+  # Required parameters:
+  #   model: The model object
+  #   field: The field name
+  #   turbo_frame_id: The turbo frame ID to wrap the field
+  #   i18n_base: The i18n base path
+  # Optional parameters:
+  #   accept: File accept types (defaults to "image/*")
+  
+  model = local_assigns[:model]
+  field = local_assigns[:field]
+  turbo_frame_id = local_assigns[:turbo_frame_id]
+  i18n_base = local_assigns[:i18n_base]
+  accept = local_assigns[:accept] || "image/*"
+%>
+
+<%= turbo_frame_tag turbo_frame_id do %>
+  <%= fields model: model, skip_default_ids: false do |form| %>
+    <% @_current_form = form %>
+    <% @_current_i18n_base = i18n_base %>
+    <%= render 'chobble_forms/file_field', field: field, accept: accept %>
+  <% end %>
+<% end %>

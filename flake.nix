@@ -35,6 +35,7 @@
             fi
 
             echo "Ruby $(ruby --version)"
+            git pull
           '';
         };
       }
