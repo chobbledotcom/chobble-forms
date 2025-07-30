@@ -7,7 +7,7 @@ require "action_view/railtie"
 require "rspec/rails"
 
 # Load the gem
-require "chobble_forms"
+require "chobble-forms"
 
 # Create a minimal Rails application for testing
 module ChobbleFormsTest
