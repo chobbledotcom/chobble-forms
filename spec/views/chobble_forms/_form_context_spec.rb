@@ -1,16 +1,20 @@
 require "rails_helper"
 
 RSpec.describe "chobble_forms/_form_context", type: :view do
-  class TestModel
-    include ActiveModel::Model
-    attr_accessor :name, :description
+  let(:test_model_class) do
+    Class.new do
+      include ActiveModel::Model
+      attr_accessor :name, :description
 
-    def persisted? = true
+      def persisted? = true
 
-    def to_param = "42"
+      def to_param = "42"
+
+      def self.name = "TestModel"
+    end
   end
 
-  let(:test_model) { TestModel.new(name: "Test", description: "Description") }
+  let(:test_model) { test_model_class.new(name: "Test", description: "Description") }
   let(:i18n_base) { "test.base" }
   let(:render_options) { {model: test_model, i18n_base: i18n_base} }
 
