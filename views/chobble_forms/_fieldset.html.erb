@@ -3,6 +3,7 @@
   @_current_form = local_assigns[:form] || @_current_form
   i18n_base = @_current_i18n_base || local_assigns[:i18n_base]
   raise ArgumentError, "i18n_base is required for form fieldsets" if i18n_base.nil?
+  raise ArgumentError, "legend_key is required for form fieldsets" if local_assigns[:legend_key].nil?
   @_current_i18n_base = i18n_base
   
   sections_base = i18n_base.sub(/\.fields$/, '')
