@@ -1,58 +1,5 @@
 require "bundler/setup"
 
-# Mock Rails before loading the gem
-require "ostruct"
-
-module Rails
-  class Engine
-    def self.isolate_namespace(mod)
-      # no-op for testing
-    end
-
-    def self.config
-      @config ||= OpenStruct.new(
-        to_prepare: ->(&block) {},
-        generators: OpenStruct.new
-      )
-    end
-
-    def self.initializer(name, &block)
-      # no-op for testing
-    end
-  end
-
-  def self.application
-    @application ||= OpenStruct.new(
-      config: OpenStruct.new
-    )
-  end
-
-  module VERSION
-    STRING = "7.0.0"
-  end
-end
-
-module ActiveSupport
-  def self.on_load(name, &block)
-    # no-op for testing
-  end
-end
-
-# Add present? method for testing
-class Object
-  def present?
-    !nil? && !(respond_to?(:empty?) && empty?)
-  end
-end
-
-class ApplicationController
-  def self.helper(mod)
-    # no-op for testing
-  end
-end
-
-require "chobble-forms"
-
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

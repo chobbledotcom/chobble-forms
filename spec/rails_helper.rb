@@ -2,9 +2,13 @@ ENV["RAILS_ENV"] ||= "test"
 
 require "bundler/setup"
 require "rails"
+require "active_model/railtie"
 require "action_controller/railtie"
 require "action_view/railtie"
-require "rspec/rails"
+
+# Create a test controller for view specs
+class ApplicationController < ActionController::Base
+end
 
 # Load the gem
 require "chobble-forms"
@@ -34,16 +38,15 @@ end
 # Initialize the Rails application
 Rails.application.initialize!
 
-# Create a test controller for view specs
-class ApplicationController < ActionController::Base
-end
+# Now require rspec-rails and capybara after Rails is initialized
+require "rspec/rails"
+require "capybara/rspec"
 
 # Include I18n test helpers
 I18n.load_path += Dir[File.expand_path("../fixtures/locales/*.yml", __FILE__)]
 I18n.default_locale = :en
 I18n.backend.reload!
 
-require "spec_helper"
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
@@ -51,6 +54,7 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
 
   config.include ChobbleForms::Helpers, type: :view
+  config.include Capybara::RSpecMatchers, type: :view
 
   # Clear I18n backend between tests
   config.before(:each) do

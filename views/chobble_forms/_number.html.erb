@@ -11,8 +11,8 @@
   number_field = field
   number_options = local_assigns.slice(:step, :min, :max, :required)
 
-  form = @_current_form
   field_data = form_field_setup(field, local_assigns)
+  form = field_data[:form_object]
   number_options[:value] = strip_trailing_zeros(field_data[:value])
 %>
 
