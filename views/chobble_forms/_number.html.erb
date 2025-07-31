@@ -1,29 +1,36 @@
 <%
-  # Get i18n_base from section (already validated there)
-  setup = form_field_setup(field, local_assigns)
+  # Partial for number
+  # Required parameters:
+  #   field: Base field name (e.g., 'users_at_1000mm')
+  # Optional parameters (passed through to number field):
+  #   step: Step value for number input (default: 0.01)
+  #   min: Minimum value
+  #   max: Maximum value
+  #   required: Whether the number field is required
 
-  step ||= 0.01
-  min ||= nil
-  max ||= nil
-  required ||= false
+  number_field = field
+  number_options = local_assigns.slice(:step, :min, :max, :required)
 
-  field_options = {
-    step: step,
-    min: min,
-    max: max,
-    required: required,
-    placeholder: setup[:field_placeholder]
-  }
+  form = @_current_form
+  model = form.object
 
-  if setup[:prefilled]
-    field_options[:value] = setup[:value]
-  end
+  field_data = form_field_setup(field, local_assigns)
+  number_options[:value] = field_data[:value]
 %>
 
-<div class="number-field" id="<%= field %>">
-  <%= setup[:form_object].label field, setup[:field_label] %>
-  <%= setup[:form_object].number_field field, field_options.compact %>
-  <% if setup[:field_hint].present? %>
-    <small class="form-text"><%= setup[:field_hint] %></small>
-  <% end %>
+<div class="form-grid number" id="<%= number_field %>">
+  <label for="<%= form.field_id(number_field) %>" class="label">
+    <%= field_data[:field_label] %>
+  </label>
+
+  <%= form.number_field number_field,
+    id: form.field_id(number_field),
+    step: number_options[:step] || 0.1,
+    min: number_options[:min],
+    max: number_options[:max],
+    required: number_options[:required],
+    placeholder: field_data[:field_placeholder],
+    value: number_options[:value],
+    class: "number"
+  %>
 </div>
