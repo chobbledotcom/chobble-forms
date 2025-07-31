@@ -47,7 +47,6 @@ I18n.load_path += Dir[File.expand_path("../fixtures/locales/*.yml", __FILE__)]
 I18n.default_locale = :en
 I18n.backend.reload!
 
-
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
   config.infer_spec_type_from_file_location!

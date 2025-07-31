@@ -16,7 +16,7 @@ RSpec.describe "chobble_forms/_display_field.html.erb", type: :view do
     # Set up form context like fieldset would
     view.instance_variable_set(:@_current_form, form_object)
     view.instance_variable_set(:@_current_i18n_base, "forms.user_settings")
-    
+
     # Mock i18n translations
     I18n.backend.store_translations(:en, {
       forms: {

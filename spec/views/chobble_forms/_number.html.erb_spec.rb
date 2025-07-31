@@ -33,7 +33,7 @@ RSpec.describe "chobble_forms/_number.html.erb", type: :view do
     allow(mock_form).to receive(:number_field)
       .with(field, anything)
       .and_return('<input type="number" name="quantity" id="quantity" />'.html_safe)
-      
+
     # Mock field_id method
     allow(mock_form).to receive(:field_id).with(field).and_return("quantity")
 
@@ -159,14 +159,14 @@ RSpec.describe "chobble_forms/_number.html.erb", type: :view do
         allow(mock_form).to receive(:number_field)
           .with(field_name, anything)
           .and_return(%(<input type="number" name="#{field_name}" id="#{field_name}" />).html_safe)
-          
+
         allow(mock_form).to receive(:field_id).with(field_name).and_return(field_name.to_s)
 
         # Need to mock form_field_setup for the new field
         allow(view).to receive(:form_field_setup).and_return(
           field_config.merge(field_label: expected_label, value: nil)
         )
-        
+
         # Mock strip_trailing_zeros helper
         allow(view).to receive(:strip_trailing_zeros).and_return(nil)
 

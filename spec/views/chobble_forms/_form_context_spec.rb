@@ -6,6 +6,7 @@ RSpec.describe "chobble_forms/_form_context", type: :view do
     attr_accessor :name, :description
 
     def persisted? = true
+
     def to_param = "42"
   end
 

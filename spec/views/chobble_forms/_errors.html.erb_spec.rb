@@ -185,7 +185,7 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
 
     it "accepts model via 'object' parameter for compatibility" do
       allow(mock_model).to receive(:errors).and_return(double("Errors", any?: false, count: 0))
-      
+
       # The partial doesn't render anything when there are no errors
       render partial: "chobble_forms/errors", locals: {object: mock_model}
       expect(rendered.strip).to be_empty
