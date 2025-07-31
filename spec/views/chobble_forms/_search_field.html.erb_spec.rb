@@ -12,7 +12,7 @@ RSpec.describe "chobble_forms/_search_field.html.erb", type: :view do
     it "renders search form with default values" do
       render "chobble_forms/search_field", url: search_url
 
-      expect(rendered).to have_selector('div.search-form')
+      expect(rendered).to have_selector("div.search-form")
       expect(rendered).to have_selector('form[action="/search"][method="get"]')
       expect(rendered).to have_field("query", placeholder: "Search...")
       expect(rendered).to have_button("Search")
@@ -49,7 +49,7 @@ RSpec.describe "chobble_forms/_search_field.html.erb", type: :view do
         url: search_url,
         css_class: "custom-search"
 
-      expect(rendered).to have_selector('div.custom-search')
+      expect(rendered).to have_selector("div.custom-search")
     end
   end
 

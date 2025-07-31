@@ -114,7 +114,7 @@ RSpec.describe "chobble_forms/_auto_submit_select.html.erb", type: :view do
 
       expect(rendered).to have_selector('form[action="/filter"][method="get"][data-turbo="false"]')
       expect(rendered).to have_select
-      select = Capybara.string(rendered).find('select')
+      select = Capybara.string(rendered).find("select")
       expect(select[:onchange]).to eq("this.form.submit();")
     end
 
@@ -205,7 +205,7 @@ RSpec.describe "chobble_forms/_auto_submit_select.html.erb", type: :view do
         url: "/test"
 
       expect(rendered).to have_select
-      select = Capybara.string(rendered).find('select')
+      select = Capybara.string(rendered).find("select")
       expect(select[:onchange]).to eq("this.form.submit();")
     end
   end

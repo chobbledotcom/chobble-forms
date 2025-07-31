@@ -94,7 +94,7 @@ RSpec.describe "chobble_forms/_text_field.html.erb", type: :view do
     context "with placeholder" do
       it "does not pass placeholder to field" do
         render_text_field
-        expect(rendered).not_to have_selector('input[placeholder]')
+        expect(rendered).not_to have_selector("input[placeholder]")
       end
     end
 
