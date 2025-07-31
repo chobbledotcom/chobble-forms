@@ -60,12 +60,12 @@ RSpec.describe "chobble_forms/_pass_fail.html.erb", type: :view do
       render_pass_fail
 
       # Check that Pass label contains the radio button with value="true"
-      expect(rendered).to have_css('label', text: "Pass") do |label|
+      expect(rendered).to have_css("label", text: "Pass") do |label|
         expect(label).to have_css('input[type="radio"][value="true"]')
       end
 
       # Check that Fail label contains the radio button with value="false"
-      expect(rendered).to have_css('label', text: "Fail") do |label|
+      expect(rendered).to have_css("label", text: "Fail") do |label|
         expect(label).to have_css('input[type="radio"][value="false"]')
       end
     end
@@ -149,12 +149,12 @@ RSpec.describe "chobble_forms/_pass_fail.html.erb", type: :view do
       render_pass_fail
 
       # Check that Pass label contains the radio button with value="true"
-      expect(rendered).to have_css('label', text: "Pass") do |label|
+      expect(rendered).to have_css("label", text: "Pass") do |label|
         expect(label).to have_css('input[type="radio"][value="true"]')
       end
 
       # Check that Fail label contains the radio button with value="false"
-      expect(rendered).to have_css('label', text: "Fail") do |label|
+      expect(rendered).to have_css("label", text: "Fail") do |label|
         expect(label).to have_css('input[type="radio"][value="false"]')
       end
     end
