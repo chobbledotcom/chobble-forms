@@ -107,7 +107,7 @@ RSpec.describe "chobble_forms/_pass_fail_na_comment.html.erb", type: :view do
     it "uses correct field label from i18n" do
       render_pass_fail_na_comment
 
-      expect(rendered).to have_css("label.label", text: field_label)
+      expect(rendered).to have_text(field_label)
     end
   end
 end

@@ -49,32 +49,30 @@ RSpec.describe "chobble_forms/_pass_fail.html.erb", type: :view do
       render_pass_fail
 
       expect(rendered).to have_css("div")
-      expect(rendered).to have_css("label", text: "Status") # Field label
-      expect(rendered).to have_css('input[type="radio"][name="pass_fail_test_model[status]"][value="true"]')
-      expect(rendered).to have_css('input[type="radio"][name="pass_fail_test_model[status]"][value="false"]')
-      expect(rendered).to have_css("label", text: "Pass")
-      expect(rendered).to have_css("label", text: "Fail")
+      expect(rendered).to have_text("Status")
+      expect(rendered).to have_field("pass_fail_test_model[status]", with: "true", type: "radio")
+      expect(rendered).to have_field("pass_fail_test_model[status]", with: "false", type: "radio")
+      expect(rendered).to have_text("Pass")
+      expect(rendered).to have_text("Fail")
     end
 
     it "nests radio buttons inside their labels" do
       render_pass_fail
 
-      # Check that Pass label contains the radio button with value="true"
-      expect(rendered).to have_css("label", text: "Pass") do |label|
-        expect(label).to have_css('input[type="radio"][value="true"]')
-      end
+      # Check that Pass label contains the radio button
+      pass_label = Capybara.string(rendered).find("label", text: "Pass")
+      expect(pass_label).to have_css('input[type="radio"][value="true"]')
 
-      # Check that Fail label contains the radio button with value="false"
-      expect(rendered).to have_css("label", text: "Fail") do |label|
-        expect(label).to have_css('input[type="radio"][value="false"]')
-      end
+      # Check that Fail label contains the radio button
+      fail_label = Capybara.string(rendered).find("label", text: "Fail")
+      expect(fail_label).to have_css('input[type="radio"][value="false"]')
     end
 
     it "generates proper radio button IDs for accessibility" do
       render_pass_fail
 
-      expect(rendered).to have_css('input#pass_fail_test_model_status_true[type="radio"]')
-      expect(rendered).to have_css('input#pass_fail_test_model_status_false[type="radio"]')
+      expect(rendered).to have_field("pass_fail_test_model_status_true", type: "radio")
+      expect(rendered).to have_field("pass_fail_test_model_status_false", type: "radio")
     end
   end
 
@@ -85,8 +83,8 @@ RSpec.describe "chobble_forms/_pass_fail.html.erb", type: :view do
 
       render_pass_fail
 
-      expect(rendered).to have_css('input[type="radio"][value="true"][checked="checked"]')
-      expect(rendered).not_to have_css('input[type="radio"][value="false"][checked="checked"]')
+      expect(rendered).to have_checked_field("pass_fail_test_model[status]", with: "true")
+      expect(rendered).to have_unchecked_field("pass_fail_test_model[status]", with: "false")
     end
 
     it "does not check any radio button when field value is nil" do
@@ -95,7 +93,8 @@ RSpec.describe "chobble_forms/_pass_fail.html.erb", type: :view do
       render_pass_fail
 
       # When the field value is nil, no radio button should be checked
-      expect(rendered).not_to have_css('input[type="radio"][checked="checked"]')
+      expect(rendered).to have_unchecked_field("pass_fail_test_model[status]", with: "true")
+      expect(rendered).to have_unchecked_field("pass_fail_test_model[status]", with: "false")
     end
   end
 
@@ -110,7 +109,7 @@ RSpec.describe "chobble_forms/_pass_fail.html.erb", type: :view do
         render partial: "chobble_forms/pass_fail", locals: {field: field_name}
 
         expect(rendered).to have_css("div")
-        expect(rendered).to have_css("label", text: expected_label)
+        expect(rendered).to have_text(expected_label)
       end
     end
 
@@ -148,22 +147,20 @@ RSpec.describe "chobble_forms/_pass_fail.html.erb", type: :view do
     it "properly associates radio buttons with their labels through nesting" do
       render_pass_fail
 
-      # Check that Pass label contains the radio button with value="true"
-      expect(rendered).to have_css("label", text: "Pass") do |label|
-        expect(label).to have_css('input[type="radio"][value="true"]')
-      end
+      # Check that Pass label contains the radio button
+      pass_label = Capybara.string(rendered).find("label", text: "Pass")
+      expect(pass_label).to have_css('input[type="radio"][value="true"]')
 
-      # Check that Fail label contains the radio button with value="false"
-      expect(rendered).to have_css("label", text: "Fail") do |label|
-        expect(label).to have_css('input[type="radio"][value="false"]')
-      end
+      # Check that Fail label contains the radio button
+      fail_label = Capybara.string(rendered).find("label", text: "Fail")
+      expect(fail_label).to have_css('input[type="radio"][value="false"]')
     end
 
     it "uses boolean values for pass/fail" do
       render_pass_fail
 
-      expect(rendered).to have_css('input[type="radio"][value="true"]')
-      expect(rendered).to have_css('input[type="radio"][value="false"]')
+      expect(rendered).to have_field("pass_fail_test_model[status]", with: "true", type: "radio")
+      expect(rendered).to have_field("pass_fail_test_model[status]", with: "false", type: "radio")
     end
   end
 end

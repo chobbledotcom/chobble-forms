@@ -52,8 +52,8 @@ RSpec.describe "chobble_forms/_fieldset.html.erb", type: :view do
 
       render partial: "chobble_forms/fieldset", locals: {i18n_base: base_i18n_key, legend: "Test"}
 
-      expect(rendered).to have_css("fieldset")
-      expect(rendered).to include("Sample field content")
+      expect(rendered).to have_selector("fieldset")
+      expect(rendered).to have_text("Sample field content")
     end
   end
 
@@ -65,7 +65,7 @@ RSpec.describe "chobble_forms/_fieldset.html.erb", type: :view do
 
         render partial: "chobble_forms/fieldset", locals: {i18n_base: base_i18n_key, legend: "Custom Legend"}
 
-        expect(rendered).to include("Custom Legend")
+        expect(rendered).to have_text("Custom Legend")
       end
 
       it "renders fieldset without legend when empty" do
@@ -74,7 +74,7 @@ RSpec.describe "chobble_forms/_fieldset.html.erb", type: :view do
 
         render partial: "chobble_forms/fieldset", locals: {i18n_base: base_i18n_key, legend: ""}
 
-        expect(rendered).not_to include("<legend>")
+        expect(rendered).not_to have_selector("legend")
       end
     end
 
@@ -85,7 +85,7 @@ RSpec.describe "chobble_forms/_fieldset.html.erb", type: :view do
 
         render partial: "chobble_forms/fieldset", locals: {i18n_base: "test.forms.fields", legend_key: "structure"}
 
-        expect(rendered).to include("Structure Information")
+        expect(rendered).to have_text("Structure Information")
       end
 
       it "humanizes legend_key when translation missing" do
@@ -94,7 +94,7 @@ RSpec.describe "chobble_forms/_fieldset.html.erb", type: :view do
 
         render partial: "chobble_forms/fieldset", locals: {i18n_base: base_i18n_key, legend_key: "unknown_section"}
 
-        expect(rendered).to include("Unknown section")
+        expect(rendered).to have_text("Unknown section")
       end
     end
   end
@@ -106,9 +106,9 @@ RSpec.describe "chobble_forms/_fieldset.html.erb", type: :view do
 
       render partial: "chobble_forms/fieldset", locals: {i18n_base: base_i18n_key, legend: "Test"}
 
-      expect(rendered).not_to include("class=")
-      expect(rendered).to include("<fieldset>")
-      expect(rendered).to include("<legend>")
+      expect(rendered).not_to have_selector("fieldset[class]")
+      expect(rendered).to have_selector("fieldset")
+      expect(rendered).to have_selector("legend")
     end
   end
 
@@ -134,8 +134,8 @@ RSpec.describe "chobble_forms/_fieldset.html.erb", type: :view do
 
       render template: "test_wrapper"
 
-      expect(rendered).to have_css("fieldset legend", text: "Structure Information")
-      expect(rendered).to have_css("fieldset div", text: "Test Content")
+      expect(rendered).to have_selector("fieldset legend", text: "Structure Information")
+      expect(rendered).to have_selector("fieldset div", text: "Test Content")
     end
 
     it "sets instance variables for child components" do
@@ -158,7 +158,7 @@ RSpec.describe "chobble_forms/_fieldset.html.erb", type: :view do
 
       render template: "test_wrapper"
 
-      expect(rendered).to have_css("fieldset")
+      expect(rendered).to have_selector("fieldset")
     end
 
     it "handles legend_key with i18n lookup" do
@@ -170,8 +170,8 @@ RSpec.describe "chobble_forms/_fieldset.html.erb", type: :view do
 
       render template: "test_wrapper"
 
-      expect(rendered).to have_css("fieldset legend", text: "Structure Information")
-      expect(rendered).to have_css("fieldset div", text: "Structure Content")
+      expect(rendered).to have_selector("fieldset legend", text: "Structure Information")
+      expect(rendered).to have_selector("fieldset div", text: "Structure Content")
     end
 
     it "renders footer text when provided in i18n" do
@@ -194,8 +194,8 @@ RSpec.describe "chobble_forms/_fieldset.html.erb", type: :view do
 
       render template: "test_wrapper"
 
-      expect(rendered).to have_css("fieldset legend", text: "Structure Information")
-      expect(rendered).to have_css("fieldset small", text: "This is a footer note")
+      expect(rendered).to have_selector("fieldset legend", text: "Structure Information")
+      expect(rendered).to have_selector("fieldset small", text: "This is a footer note")
     end
   end
 end

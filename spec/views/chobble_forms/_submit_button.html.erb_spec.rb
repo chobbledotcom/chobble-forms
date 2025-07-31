@@ -25,15 +25,14 @@ RSpec.describe "chobble_forms/_submit_button.html.erb", type: :view do
     it "renders a submit button with default text" do
       render partial: "chobble_forms/submit_button"
 
-      expect(rendered).to have_css('input[type="submit"]')
-      expect(rendered).to include(%(value="Save Form"))
+      expect(rendered).to have_button("Save Form")
       expect(mock_form).to have_received(:submit).with("Save Form")
     end
 
     it "uses the form object from @_current_form when no form provided" do
       render partial: "chobble_forms/submit_button"
 
-      expect(rendered).to include(%(value="Save Form"))
+      expect(rendered).to have_button("Save Form")
       expect(mock_form).to have_received(:submit).with("Save Form")
     end
   end
@@ -43,7 +42,7 @@ RSpec.describe "chobble_forms/_submit_button.html.erb", type: :view do
       render partial: "chobble_forms/submit_button"
 
       expect(view).to have_received(:t).with("forms.test_form.submit", raise: true)
-      expect(rendered).to include(%(value="Save Form"))
+      expect(rendered).to have_button("Save Form")
     end
 
     it "works with different i18n bases" do
@@ -54,7 +53,7 @@ RSpec.describe "chobble_forms/_submit_button.html.erb", type: :view do
 
       render partial: "chobble_forms/submit_button"
 
-      expect(rendered).to include(%(value="Update User"))
+      expect(rendered).to have_button("Update User")
     end
   end
 
@@ -83,7 +82,7 @@ RSpec.describe "chobble_forms/_submit_button.html.erb", type: :view do
 
         render partial: "chobble_forms/submit_button"
 
-        expect(rendered).to include(%(value="#{expected_text}"))
+        expect(rendered).to have_button(expected_text)
       end
     end
   end
@@ -110,7 +109,7 @@ RSpec.describe "chobble_forms/_submit_button.html.erb", type: :view do
 
   describe "edge cases and error handling" do
     {
-      "HTML entities" => "&lt;Save&gt;",
+      "HTML entities" => "<Save>",
       "very long text" => "This is a very long submit button text that might wrap or cause layout issues",
       "Unicode characters" => "Submit ✓ 提交"
     }.each do |description, test_text|
@@ -121,7 +120,8 @@ RSpec.describe "chobble_forms/_submit_button.html.erb", type: :view do
 
         render partial: "chobble_forms/submit_button"
 
-        expect(rendered).to include(%(value="#{test_text}"))
+        # Capybara's have_button checks for the actual text, not HTML entities
+        expect(rendered).to have_button(test_text)
       end
     end
   end
@@ -130,8 +130,7 @@ RSpec.describe "chobble_forms/_submit_button.html.erb", type: :view do
     it "generates valid HTML submit input" do
       render partial: "chobble_forms/submit_button"
 
-      expect(rendered).to include('type="submit"')
-      expect(rendered).to include(%(value="Save Form"))
+      expect(rendered).to have_selector('input[type="submit"][value="Save Form"]')
     end
 
     it "does not add extra wrapper elements" do
@@ -142,7 +141,7 @@ RSpec.describe "chobble_forms/_submit_button.html.erb", type: :view do
     it "maintains button text in value attribute" do
       render partial: "chobble_forms/submit_button"
 
-      expect(rendered).to include(%(value="Save Form"))
+      expect(rendered).to have_button("Save Form")
     end
   end
 
@@ -150,19 +149,19 @@ RSpec.describe "chobble_forms/_submit_button.html.erb", type: :view do
     it "creates focusable submit element" do
       render partial: "chobble_forms/submit_button"
 
-      expect(rendered).to have_css('input[type="submit"]')
+      expect(rendered).to have_selector('input[type="submit"]')
     end
 
     it "provides clear action text from i18n" do
       render partial: "chobble_forms/submit_button"
 
-      expect(rendered).to include(%(value="Save Form"))
+      expect(rendered).to have_button("Save Form")
     end
 
     it "works with screen readers via value attribute" do
       render partial: "chobble_forms/submit_button"
 
-      expect(rendered).to include(%(value="Save Form"))
+      expect(rendered).to have_button("Save Form")
     end
   end
 end

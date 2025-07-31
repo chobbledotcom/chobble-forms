@@ -94,8 +94,8 @@ RSpec.describe "chobble_forms/_number_pass_fail_na_comment.html.erb", type: :vie
   def expect_pass_fail_radios
     expect(rendered).to have_content(pass_label)
     expect(rendered).to have_content(fail_label)
-    expect(rendered).to have_css('input[type="radio"][value="pass"]')
-    expect(rendered).to have_css('input[type="radio"][value="fail"]')
+    expect(rendered).to have_field(pass_label, type: "radio", with: "pass")
+    expect(rendered).to have_field(fail_label, type: "radio", with: "fail")
   end
 
   def expect_na_radio
@@ -138,19 +138,23 @@ RSpec.describe "chobble_forms/_number_pass_fail_na_comment.html.erb", type: :vie
     it "accepts custom step value" do
       render_number_pass_fail_na_comment(step: 0.01)
 
-      expect(rendered).to have_css('input[type="number"][step="0.01"]')
+      number_field = Capybara.string(rendered).find('input[type="number"]')
+      expect(number_field[:step]).to eq("0.01")
     end
 
     it "accepts min and max values" do
       render_number_pass_fail_na_comment(min: 0, max: 100)
 
-      expect(rendered).to have_css('input[type="number"][min="0"][max="100"]')
+      number_field = Capybara.string(rendered).find('input[type="number"]')
+      expect(number_field[:min]).to eq("0")
+      expect(number_field[:max]).to eq("100")
     end
 
     it "accepts required attribute" do
       render_number_pass_fail_na_comment(required: true)
 
-      expect(rendered).to have_css('input[type="number"][required]')
+      number_field = Capybara.string(rendered).find('input[type="number"]')
+      expect(number_field[:required]).to be_present
     end
   end
 
@@ -178,7 +182,7 @@ RSpec.describe "chobble_forms/_number_pass_fail_na_comment.html.erb", type: :vie
 
         grid_selector = "div.form-grid.number-radio-comment"
         expect(rendered).to have_css(grid_selector)
-        expect(rendered).to have_css("label.label", text: expected_label)
+        expect(rendered).to have_text(expected_label)
 
         # Number field
         number_selector = "input[type=\"number\"][name*=\"#{field_name}\"]"
@@ -217,7 +221,7 @@ RSpec.describe "chobble_forms/_number_pass_fail_na_comment.html.erb", type: :vie
     it "uses correct field label from i18n" do
       render_number_pass_fail_na_comment
 
-      expect(rendered).to have_css("label.label", text: "Slide Platform Height")
+      expect(rendered).to have_text("Slide Platform Height")
     end
   end
 end

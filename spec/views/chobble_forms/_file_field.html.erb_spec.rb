@@ -31,9 +31,9 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
     it "renders the file field without preview" do
       render "chobble_forms/file_field", field: field
 
-      expect(rendered).to include("Photo")
-      expect(rendered).to include('<input type="file" name="photo">')
-      expect(rendered).not_to include("file-preview")
+      expect(rendered).to have_text("Photo")
+      expect(rendered).to have_selector('input[type="file"][name="photo"]')
+      expect(rendered).not_to have_selector(".file-preview")
     end
 
     it "uses custom accept attribute" do
@@ -75,9 +75,9 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
 
         render "chobble_forms/file_field", field: field
 
-        expect(rendered).to include("file-preview")
-        expect(rendered).to include('<img src="test.jpg">')
-        expect(rendered).to include("Current photo")
+        expect(rendered).to have_selector(".file-preview")
+        expect(rendered).to have_selector('img[src="test.jpg"]')
+        expect(rendered).to have_text("Current photo")
       end
 
       it "uses custom preview size" do
@@ -86,7 +86,7 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
         render "chobble_forms/file_field", field: field, preview_size: 150
 
         expect(attachment).to have_received(:variant).with(resize_to_limit: [150, 150])
-        expect(rendered).to include('<img src="test.jpg"')
+        expect(rendered).to have_selector('img[src="test.jpg"]')
       end
     end
 
@@ -99,9 +99,9 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
       it "shows filename for non-image file" do
         render "chobble_forms/file_field", field: field
 
-        expect(rendered).not_to include("<img")
-        expect(rendered).to include("document.pdf")
-        expect(rendered).to include("Current photo")
+        expect(rendered).not_to have_selector("img")
+        expect(rendered).to have_text("document.pdf")
+        expect(rendered).to have_text("Current photo")
       end
     end
   end
@@ -114,9 +114,9 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
     it "renders without errors or preview" do
       render "chobble_forms/file_field", field: field
 
-      expect(rendered).to include("Photo")
-      expect(rendered).to include('<input type="file" name="photo">')
-      expect(rendered).not_to include("file-preview")
+      expect(rendered).to have_text("Photo")
+      expect(rendered).to have_selector('input[type="file"][name="photo"]')
+      expect(rendered).not_to have_selector(".file-preview")
     end
   end
 
@@ -138,8 +138,8 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
     it "displays the hint text" do
       render "chobble_forms/file_field", field: field
 
-      expect(rendered).to include("Upload an image file")
-      expect(rendered).to include("form-text")
+      expect(rendered).to have_text("Upload an image file")
+      expect(rendered).to have_selector(".form-text")
     end
   end
 end

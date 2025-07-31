@@ -12,12 +12,10 @@ RSpec.describe "chobble_forms/_search_field.html.erb", type: :view do
     it "renders search form with default values" do
       render "chobble_forms/search_field", url: search_url
 
-      expect(rendered).to include('class="search-form"')
-      expect(rendered).to include('action="/search"')
-      expect(rendered).to include('method="get"')
-      expect(rendered).to include('name="query"')
-      expect(rendered).to include('placeholder="Search..."')
-      expect(rendered).to include('value="Search"')
+      expect(rendered).to have_selector('div.search-form')
+      expect(rendered).to have_selector('form[action="/search"][method="get"]')
+      expect(rendered).to have_field("query", placeholder: "Search...")
+      expect(rendered).to have_button("Search")
     end
   end
 
@@ -27,7 +25,7 @@ RSpec.describe "chobble_forms/_search_field.html.erb", type: :view do
         url: search_url,
         placeholder: "Find units..."
 
-      expect(rendered).to include('placeholder="Find units..."')
+      expect(rendered).to have_field(placeholder: "Find units...")
     end
 
     it "uses custom field name" do
@@ -35,7 +33,7 @@ RSpec.describe "chobble_forms/_search_field.html.erb", type: :view do
         url: search_url,
         field_name: :search_term
 
-      expect(rendered).to include('name="search_term"')
+      expect(rendered).to have_field("search_term")
     end
 
     it "uses custom submit text" do
@@ -43,7 +41,7 @@ RSpec.describe "chobble_forms/_search_field.html.erb", type: :view do
         url: search_url,
         submit_text: "Find"
 
-      expect(rendered).to include('value="Find"')
+      expect(rendered).to have_button("Find")
     end
 
     it "uses custom CSS class" do
@@ -51,7 +49,7 @@ RSpec.describe "chobble_forms/_search_field.html.erb", type: :view do
         url: search_url,
         css_class: "custom-search"
 
-      expect(rendered).to include('class="custom-search"')
+      expect(rendered).to have_selector('div.custom-search')
     end
   end
 
@@ -63,7 +61,7 @@ RSpec.describe "chobble_forms/_search_field.html.erb", type: :view do
     it "preserves existing search value" do
       render "chobble_forms/search_field", url: search_url
 
-      expect(rendered).to include('value="test search"')
+      expect(rendered).to have_field("query", with: "test search")
     end
   end
 
@@ -77,7 +75,7 @@ RSpec.describe "chobble_forms/_search_field.html.erb", type: :view do
         url: search_url,
         field_name: :search_term
 
-      expect(rendered).to include('value="custom search"')
+      expect(rendered).to have_field("search_term", with: "custom search")
     end
   end
 
@@ -93,7 +91,7 @@ RSpec.describe "chobble_forms/_search_field.html.erb", type: :view do
     it "handles URL with path helpers" do
       render "chobble_forms/search_field", url: search_url + "?type=unit"
 
-      expect(rendered).to include('action="/search?type=unit"')
+      expect(rendered).to have_selector('form[action="/search?type=unit"]')
     end
   end
 end

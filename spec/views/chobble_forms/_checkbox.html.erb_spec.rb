@@ -45,9 +45,9 @@ RSpec.describe "chobble_forms/_checkbox.html.erb", type: :view do
     it "renders a complete checkbox form group" do
       render_checkbox
 
-      expect(rendered).to have_css('input[type="checkbox"]')
-      expect(rendered).to have_css("label", text: "Active Status")
-      expect(rendered).to have_css("small", text: "Enable this feature")
+      expect(rendered).to have_field(type: "checkbox")
+      expect(rendered).to have_text("Active Status")
+      expect(rendered).to have_text("Enable this feature")
     end
 
     context "when hint is not present" do
@@ -62,7 +62,7 @@ RSpec.describe "chobble_forms/_checkbox.html.erb", type: :view do
 
       it "does not render the hint element" do
         render_checkbox
-        expect(rendered).not_to have_css("small")
+        expect(rendered).not_to have_text("Enable this feature")
       end
     end
   end
@@ -105,8 +105,8 @@ RSpec.describe "chobble_forms/_checkbox.html.erb", type: :view do
         end
 
         render_checkbox(field: field_name)
-        expect(rendered).to have_css('input[type="checkbox"]')
-        expect(rendered).to have_css("label")
+        expect(rendered).to have_field(type: "checkbox")
+        expect(rendered).to have_selector("label")
       end
     end
 
@@ -119,22 +119,21 @@ RSpec.describe "chobble_forms/_checkbox.html.erb", type: :view do
     before { render_checkbox }
 
     it "maintains proper semantic structure" do
-      expect(rendered).to have_css('input[type="checkbox"]')
-      expect(rendered).to have_css("label")
-      expect(rendered).to have_css("small")
+      expect(rendered).to have_field(type: "checkbox")
+      expect(rendered).to have_selector("label")
+      expect(rendered).to have_selector("small")
     end
 
     it "orders elements correctly (checkbox inside label)" do
-      expect(rendered).to have_css("label") do |label|
-        expect(label).to have_css('input[type="checkbox"]')
-      end
+      label = Capybara.string(rendered).find("label")
+      expect(label).to have_css('input[type="checkbox"]')
     end
 
     it "associates label with checkbox through proper nesting" do
       # This assumes the implementation nests the input inside the label
       # or uses proper for/id attributes
-      expect(rendered).to have_css('input[type="checkbox"]')
-      expect(rendered).to have_css("label")
+      expect(rendered).to have_field(type: "checkbox")
+      expect(rendered).to have_selector("label")
     end
   end
 end

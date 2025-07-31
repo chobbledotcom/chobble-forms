@@ -50,14 +50,13 @@ RSpec.describe "chobble_forms/_text_field.html.erb", type: :view do
     it "renders a label and text field" do
       render_text_field
 
-      expect(rendered).to have_css('label[id="name"]')
-      input_selector = 'label input[type="text"][name="text_field_test_model[name]"]'
-      expect(rendered).to have_css(input_selector)
+      expect(rendered).to have_selector('label[id="name"]')
+      expect(rendered).to have_field("text_field_test_model[name]", type: "text")
     end
 
     it "maintains correct element order" do
       render_text_field
-      expect(rendered).to have_css('label input[type="text"]')
+      expect(rendered).to have_selector('label input[type="text"]')
     end
   end
 
@@ -66,7 +65,7 @@ RSpec.describe "chobble_forms/_text_field.html.erb", type: :view do
       it "renders #{field_type} as #{input_type} input" do
         locals = {field: field_name, type: field_type}
         render partial: "chobble_forms/text_field", locals: locals
-        expect(rendered).to have_css(%(label input[type="#{input_type}"]))
+        expect(rendered).to have_selector(%(label input[type="#{input_type}"]))
       end
     end
 
@@ -88,14 +87,14 @@ RSpec.describe "chobble_forms/_text_field.html.erb", type: :view do
     context "when required" do
       it "adds required attribute" do
         render_text_field(required: true)
-        expect(rendered).to have_css('label input[required="required"]')
+        expect(rendered).to have_selector('label input[required="required"]')
       end
     end
 
     context "with placeholder" do
       it "does not pass placeholder to field" do
         render_text_field
-        expect(rendered).not_to include("placeholder=")
+        expect(rendered).not_to have_selector('input[placeholder]')
       end
     end
 
@@ -103,7 +102,8 @@ RSpec.describe "chobble_forms/_text_field.html.erb", type: :view do
       it "adds accept attribute to file input" do
         locals = {field: :document, type: :file_field, accept: "image/*"}
         render partial: "chobble_forms/text_field", locals: locals
-        expect(rendered).to have_css('label input[type="file"][accept="image/*"]')
+        file_field = Capybara.string(rendered).find('input[type="file"]')
+        expect(file_field[:accept]).to eq("image/*")
       end
     end
 
@@ -125,8 +125,7 @@ RSpec.describe "chobble_forms/_text_field.html.erb", type: :view do
   describe "form object handling" do
     it "uses the form object from @_current_form" do
       render_text_field
-      expected_name = 'input[name="text_field_test_model[name]"]'
-      expect(rendered).to have_css(expected_name)
+      expect(rendered).to have_field("text_field_test_model[name]")
     end
   end
 
@@ -134,7 +133,7 @@ RSpec.describe "chobble_forms/_text_field.html.erb", type: :view do
     context "when field has errors" do
       it "does not handle error classes" do
         render_text_field
-        expect(rendered).not_to include("field-with-errors")
+        expect(rendered).not_to have_selector(".field-with-errors")
       end
     end
   end
@@ -148,7 +147,7 @@ RSpec.describe "chobble_forms/_text_field.html.erb", type: :view do
 
     it "does not render help text element when not provided" do
       render_text_field
-      expect(rendered).not_to have_css("small.help-text")
+      expect(rendered).not_to have_selector("small.help-text")
     end
   end
 end

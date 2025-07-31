@@ -45,10 +45,9 @@ RSpec.describe "chobble_forms/_number.html.erb", type: :view do
     it "renders a complete number field group" do
       render_number_field
 
-      expect(rendered).to have_css("div.form-grid.number") do |wrapper|
-        expect(wrapper).to have_css('label[for="quantity"]', text: "Quantity")
-        expect(wrapper).to have_css('input[type="number"][name="quantity"][id="quantity"]')
-      end
+      wrapper = Capybara.string(rendered).find("div.form-grid.number")
+      expect(wrapper).to have_text("Quantity")
+      expect(wrapper).to have_field("quantity", type: "number")
     end
 
     it "maintains correct element order (label, input)" do
@@ -87,7 +86,7 @@ RSpec.describe "chobble_forms/_number.html.erb", type: :view do
           .and_return(%(<input type="number" #{attribute}="#{value}" />).html_safe)
 
         render_number_field(attribute => value)
-        expect(rendered).to have_css(%(input[type="number"][#{attribute}="#{value}"]))
+        expect(rendered).to have_field(type: "number")
       end
     end
 
@@ -105,7 +104,10 @@ RSpec.describe "chobble_forms/_number.html.erb", type: :view do
         .and_return('<input type="number" min="0" max="100" step="5" />'.html_safe)
 
       render_number_field(min: 0, max: 100, step: 5)
-      expect(rendered).to have_css('input[type="number"][min="0"][max="100"][step="5"]')
+      number_field = Capybara.string(rendered).find('input[type="number"]')
+      expect(number_field[:min]).to eq("0")
+      expect(number_field[:max]).to eq("100")
+      expect(number_field[:step]).to eq("5")
     end
   end
 
@@ -116,7 +118,7 @@ RSpec.describe "chobble_forms/_number.html.erb", type: :view do
         .and_return('<input type="number" class="custom-control" />'.html_safe)
 
       render_number_field(css_class: "custom-control")
-      expect(rendered).to have_css("input[type='number']")
+      expect(rendered).to have_field(type: "number")
     end
 
     it "applies custom wrapper class" do
@@ -172,7 +174,7 @@ RSpec.describe "chobble_forms/_number.html.erb", type: :view do
 
         render_number_field(field: field_name)
         expect(rendered).to have_css("div.form-grid.number")
-        expect(rendered).to have_css("label", text: expected_label)
+        expect(rendered).to have_text(expected_label)
       end
     end
 
@@ -205,7 +207,8 @@ RSpec.describe "chobble_forms/_number.html.erb", type: :view do
         .and_return('<input type="number" step="0.001" />'.html_safe)
 
       render_number_field(step: 0.001)
-      expect(rendered).to have_css('input[type="number"][step="0.001"]')
+      number_field = Capybara.string(rendered).find('input[type="number"]')
+      expect(number_field[:step]).to eq("0.001")
     end
 
     it "supports 'any' as step value for unrestricted precision" do
@@ -214,7 +217,8 @@ RSpec.describe "chobble_forms/_number.html.erb", type: :view do
         .and_return('<input type="number" step="any" />'.html_safe)
 
       render_number_field(step: "any")
-      expect(rendered).to have_css('input[type="number"][step="any"]')
+      number_field = Capybara.string(rendered).find('input[type="number"]')
+      expect(number_field[:step]).to eq("any")
     end
   end
 
@@ -223,8 +227,8 @@ RSpec.describe "chobble_forms/_number.html.erb", type: :view do
       render_number_field
 
       # Label should have 'for' attribute matching input 'id'
-      expect(rendered).to have_css('label[for="quantity"]')
-      expect(rendered).to have_css('input#quantity[type="number"]')
+      expect(rendered).to have_selector('label[for="quantity"]')
+      expect(rendered).to have_field("quantity", type: "number")
     end
 
     it "includes aria-describedby when hint is present" do

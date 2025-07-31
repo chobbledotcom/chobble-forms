@@ -36,10 +36,8 @@ RSpec.describe "chobble_forms/_display_field.html.erb", type: :view do
     render "chobble_forms/display_field",
       field: :name
 
-    expect(rendered).to include("<label")
-    expect(rendered).to include("Name")
-    expect(rendered).to include("<p>")
-    expect(rendered).to include("Test User")
+    expect(rendered).to have_selector("label", text: "Name")
+    expect(rendered).to have_selector("p", text: "Test User")
   end
 
   it "handles nil values gracefully" do
@@ -50,9 +48,8 @@ RSpec.describe "chobble_forms/_display_field.html.erb", type: :view do
     render "chobble_forms/display_field",
       field: :phone
 
-    expect(rendered).to include("<label")
-    expect(rendered).to include("Phone")
-    expect(rendered).to include("<p>")
+    expect(rendered).to have_selector("label", text: "Phone")
+    expect(rendered).to have_selector("p")
     # Should not crash with nil value
   end
 end

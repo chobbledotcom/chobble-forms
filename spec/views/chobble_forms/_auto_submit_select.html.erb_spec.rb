@@ -32,7 +32,7 @@ RSpec.describe "chobble_forms/_auto_submit_select.html.erb", type: :view do
         {},
         {onchange: "this.form.submit();"}
       )
-      expect(rendered).to include('<select name="status"></select>')
+      expect(rendered).to have_select("status")
     end
 
     it "includes label when provided" do
@@ -112,10 +112,10 @@ RSpec.describe "chobble_forms/_auto_submit_select.html.erb", type: :view do
         options: options,
         url: url
 
-      expect(rendered).to include('action="/filter"')
-      expect(rendered).to include('method="get"')
-      expect(rendered).to include('data-turbo="false"')
-      expect(rendered).to include('onchange="this.form.submit();"')
+      expect(rendered).to have_selector('form[action="/filter"][method="get"][data-turbo="false"]')
+      expect(rendered).to have_select
+      select = Capybara.string(rendered).find('select')
+      expect(select[:onchange]).to eq("this.form.submit();")
     end
 
     it "includes label when provided" do
@@ -125,7 +125,7 @@ RSpec.describe "chobble_forms/_auto_submit_select.html.erb", type: :view do
         url: url,
         label: "Filter by Status"
 
-      expect(rendered).to include("Filter by Status")
+      expect(rendered).to have_text("Filter by Status")
     end
 
     it "preserves specified parameters" do
@@ -137,9 +137,8 @@ RSpec.describe "chobble_forms/_auto_submit_select.html.erb", type: :view do
         url: url,
         preserve_params: [:search]
 
-      expect(rendered).to include('name="search"')
-      expect(rendered).to include('value="test"')
-      expect(rendered).not_to include('name="page"')
+      expect(rendered).to have_field("search", type: "hidden", with: "test")
+      expect(rendered).not_to have_field("page", type: "hidden")
     end
 
     it "can enable turbo" do
@@ -149,7 +148,7 @@ RSpec.describe "chobble_forms/_auto_submit_select.html.erb", type: :view do
         url: url,
         turbo_disabled: false
 
-      expect(rendered).not_to include('data-turbo="false"')
+      expect(rendered).not_to have_selector('form[data-turbo="false"]')
     end
 
     context "with existing field value in params" do
@@ -164,7 +163,7 @@ RSpec.describe "chobble_forms/_auto_submit_select.html.erb", type: :view do
           url: url
 
         # The selected option should be preserved in the options_for_select
-        expect(rendered).to include('onchange="this.form.submit();"')
+        expect(rendered).to have_select("status", selected: "Active")
       end
     end
   end
@@ -205,7 +204,9 @@ RSpec.describe "chobble_forms/_auto_submit_select.html.erb", type: :view do
         options: complex_options,
         url: "/test"
 
-      expect(rendered).to include('onchange="this.form.submit();"')
+      expect(rendered).to have_select
+      select = Capybara.string(rendered).find('select')
+      expect(select[:onchange]).to eq("this.form.submit();")
     end
   end
 end

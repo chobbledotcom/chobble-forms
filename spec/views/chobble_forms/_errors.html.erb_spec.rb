@@ -57,16 +57,16 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
       it "renders error section with proper accessibility attributes" do
         render_errors
 
-        expect(rendered).to have_css('aside.form-errors[role="alert"]')
-        expect(rendered).to have_css("h3")
-        expect(rendered).to have_css("ul")
-        expect(rendered).to have_css("li", text: "Name can't be blank")
+        expect(rendered).to have_selector('aside.form-errors[role="alert"]')
+        expect(rendered).to have_selector("h3")
+        expect(rendered).to have_selector("ul")
+        expect(rendered).to have_selector("li", text: "Name can't be blank")
       end
 
       it "iterates through all error messages" do
         render_errors
         expect(error_double).to have_received(:full_message)
-        expect(rendered).to include("Name can&#39;t be blank")
+        expect(rendered).to have_text("Name can't be blank")
       end
     end
   end
@@ -82,7 +82,7 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
     context "with custom header text" do
       it "uses provided header text" do
         render_errors(header: "Custom error header")
-        expect(rendered).to have_css("h3", text: "Custom error header")
+        expect(rendered).to have_selector("h3", text: "Custom error header")
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
           .and_return("Test Model Error Header")
 
         render_errors
-        expect(rendered).to have_css("h3", text: "Test Model Error Header")
+        expect(rendered).to have_selector("h3", text: "Test Model Error Header")
       end
 
       it "falls back to generic errors.header translation" do
@@ -102,7 +102,7 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
           .and_return("Generic Error Header")
 
         render_errors
-        expect(rendered).to have_css("h3", text: "Generic Error Header")
+        expect(rendered).to have_selector("h3", text: "Generic Error Header")
       end
 
       it "raises error when translation is missing (no fallback)" do
@@ -130,10 +130,10 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
     it "renders all error messages in a list" do
       render_errors
 
-      expect(rendered).to have_css("ul")
-      expect(rendered).to have_css("li", text: "Name can't be blank")
-      expect(rendered).to have_css("li", text: "Email is invalid")
-      expect(rendered).to have_css("li", text: "Password is too short")
+      expect(rendered).to have_selector("ul")
+      expect(rendered).to have_selector("li", text: "Name can't be blank")
+      expect(rendered).to have_selector("li", text: "Email is invalid")
+      expect(rendered).to have_selector("li", text: "Password is too short")
     end
 
     it "calls full_message on each error" do
@@ -162,8 +162,8 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
 
       it "works with #{model_class_name} model" do
         render_errors
-        expect(rendered).to have_css("aside.form-errors")
-        expect(rendered).to include("Test error")
+        expect(rendered).to have_selector("aside.form-errors")
+        expect(rendered).to have_text("Test error")
       end
     end
 
@@ -203,21 +203,21 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
 
     it "includes role='alert' for screen readers" do
       render_errors
-      expect(rendered).to have_css('aside[role="alert"]')
+      expect(rendered).to have_selector('aside[role="alert"]')
     end
 
     it "uses semantic HTML structure" do
       render_errors
 
-      expect(rendered).to have_css("aside.form-errors")
-      expect(rendered).to have_css("h3")  # Heading for context
-      expect(rendered).to have_css("ul")  # Unordered list for errors
-      expect(rendered).to have_css("li")  # List items for each error
+      expect(rendered).to have_selector("aside.form-errors")
+      expect(rendered).to have_selector("h3")  # Heading for context
+      expect(rendered).to have_selector("ul")  # Unordered list for errors
+      expect(rendered).to have_selector("li")  # List items for each error
     end
 
     it "provides clear error context with heading" do
       render_errors
-      expect(rendered).to have_css("h3")
+      expect(rendered).to have_selector("h3")
     end
   end
 
@@ -230,7 +230,7 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
       allow(view).to receive(:t).with(anything, hash_including(:count)).and_return("1 error")
 
       render_errors
-      expect(rendered).to have_css("li", text: "")
+      expect(rendered).to have_selector("li", text: "")
     end
 
     it "handles HTML in error messages" do
@@ -241,7 +241,8 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
       allow(view).to receive(:t).with(anything, hash_including(:count)).and_return("1 error")
 
       render_errors
-      expect(rendered).to include("Name &lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;")
+      # Check that HTML is escaped
+      expect(rendered.html_safe).to include("Name &lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;")
     end
 
     it "handles Unicode error messages" do
@@ -252,7 +253,7 @@ RSpec.describe "chobble_forms/_errors.html.erb", type: :view do
       allow(view).to receive(:t).with(anything, hash_including(:count)).and_return("1 error")
 
       render_errors
-      expect(rendered).to include("名前が入力されていません")
+      expect(rendered).to have_text("名前が入力されていません")
     end
   end
 end

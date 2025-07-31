@@ -26,14 +26,14 @@ RSpec.describe "chobble_forms/_text_area.html.erb", type: :view do
     it "renders text area with label" do
       render partial: "chobble_forms/text_area", locals: {field: field}
 
-      expect(rendered).to include('<label for="description">Description</label>')
-      expect(rendered).to include('<textarea name="description" id="description"></textarea>')
+      expect(rendered).to have_selector('label[for="description"]', text: "Description")
+      expect(rendered).to have_field("description", type: "textarea")
     end
 
     it "displays hint when present" do
       render partial: "chobble_forms/text_area", locals: {field: field}
 
-      expect(rendered).to have_css("small", text: "Provide details")
+      expect(rendered).to have_selector("small", text: "Provide details")
     end
 
     it "uses default rows of 4" do
@@ -85,7 +85,7 @@ RSpec.describe "chobble_forms/_text_area.html.erb", type: :view do
     it "does not render hint text" do
       render partial: "chobble_forms/text_area", locals: {field: field}
 
-      expect(rendered).not_to have_css("small")
+      expect(rendered).not_to have_selector("small")
     end
   end
 
@@ -136,19 +136,12 @@ RSpec.describe "chobble_forms/_text_area.html.erb", type: :view do
     it "has proper semantic structure" do
       render partial: "chobble_forms/text_area", locals: {field: field}
 
-      doc = Nokogiri::HTML::DocumentFragment.parse(rendered)
-
       # Should have label followed by textarea
-      label = doc.at_css("label")
-      textarea = doc.at_css("textarea")
-
-      expect(label).not_to be_nil
-      expect(textarea).not_to be_nil
+      expect(rendered).to have_selector("label")
+      expect(rendered).to have_selector("textarea")
 
       # Hint should be in a small tag
-      small = doc.at_css("small")
-      expect(small).not_to be_nil
-      expect(small.text).to eq("Provide details")
+      expect(rendered).to have_selector("small", text: "Provide details")
     end
   end
 end
