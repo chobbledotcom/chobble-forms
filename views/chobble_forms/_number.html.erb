@@ -12,8 +12,6 @@
   number_options = local_assigns.slice(:step, :min, :max, :required)
 
   form = @_current_form
-  model = form.object
-
   field_data = form_field_setup(field, local_assigns)
   number_options[:value] = field_data[:value]
 %>
