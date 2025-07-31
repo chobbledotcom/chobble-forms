@@ -12,7 +12,7 @@
   footer_text = t("#{legend_i18n_key}_footer", default: nil)
 %>
 
-<fieldset>
+<fieldset id="<%= local_assigns[:legend_key] %>">
   <% if legend_text.present? %>
     <legend><%= legend_text %></legend>
   <% end %>
