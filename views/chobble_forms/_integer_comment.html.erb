@@ -29,7 +29,7 @@
   }
 
   if field_data[:prefilled]
-    integer_options[:value] = field_data[:value]
+    integer_options[:value] = strip_trailing_zeros(field_data[:value])
   end
 
   integer_options[:data] = {}

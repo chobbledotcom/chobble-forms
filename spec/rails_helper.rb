@@ -23,6 +23,11 @@ module ChobbleFormsTest
 
     # Add a simple rack app
     config.middleware.use Rack::Runtime
+
+    # Add routes for minimal functionality
+    routes.append do
+      root to: proc { [200, {}, ["OK"]] }
+    end
   end
 end
 

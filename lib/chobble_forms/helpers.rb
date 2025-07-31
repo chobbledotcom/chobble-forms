@@ -182,6 +182,10 @@ module ChobbleForms
       )
     end
 
+    def strip_trailing_zeros(value)
+      value&.to_s&.sub(/\.0+$/, "")
+    end
+
     def resolve_association_value(model, field_str)
       base_name = field_str.chomp("_id")
       association_name = base_name.to_sym

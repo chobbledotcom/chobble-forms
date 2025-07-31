@@ -13,7 +13,7 @@
 
   form = @_current_form
   field_data = form_field_setup(field, local_assigns)
-  number_options[:value] = field_data[:value]
+  number_options[:value] = strip_trailing_zeros(field_data[:value])
 %>
 
 <div class="form-grid number" id="<%= number_field %>">

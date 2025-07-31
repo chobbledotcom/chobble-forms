@@ -23,7 +23,7 @@
   model = form.object
 
   field_data = form_field_setup(field, local_assigns)
-  number_options[:value] = field_data[:value]
+  number_options[:value] = strip_trailing_zeros(field_data[:value])
 
   pass_fail_value, pass_fail_prefilled = get_field_value_and_prefilled_status(
     form,

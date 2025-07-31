@@ -29,7 +29,7 @@
   }
 
   if field_data[:prefilled]
-    decimal_options[:value] = field_data[:value]
+    decimal_options[:value] = strip_trailing_zeros(field_data[:value])
   end
 
   decimal_options[:data] = {}
