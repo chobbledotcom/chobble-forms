@@ -1,0 +1,9 @@
+/*
+ * ChobbleForms CSS Manifest
+ * This file includes all the CSS components for the ChobbleForms gem
+ *
+ *= require chobble_forms/form_grids
+ *= require chobble_forms/form_fields
+ *= require chobble_forms/radio_buttons
+ *= require chobble_forms/flash_messages
+ */

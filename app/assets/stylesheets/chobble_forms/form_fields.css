@@ -1,0 +1,126 @@
+/* Form Field Styling
+ * Styles for form inputs, textareas, and related elements within form grids
+ */
+
+/* Highlight animation for targeted form elements */
+form *:target {
+	animation: highlight-fade 5s ease-out forwards;
+	border-radius: 5px;
+}
+
+@keyframes highlight-fade {
+	0% {
+		background: #ffff3766;
+		outline: 20px solid #ffff3766;
+	}
+	80% {
+		background: #ffff3766;
+		outline: 20px solid #ffff3766;
+	}
+	100% {
+		background: transparent;
+		outline: 20px solid transparent;
+	}
+}
+
+/* Form grid field styling */
+.form-grid input,
+.form-grid label {
+	margin: 0;
+	padding: 0;
+}
+
+.form-grid input[type="text"],
+.form-grid input[type="number"] {
+	padding: 0.4rem 0.8rem;
+}
+
+.form-grid input[type="number"],
+.form-grid input[type="text"][inputmode="decimal"] {
+	width: 5rem;
+	text-align: left;
+	padding: 0.4rem;
+	font-variant-numeric: tabular-nums;
+}
+
+.form-grid textarea {
+	margin: 0 0 0.5rem;
+	padding: 0.5rem 1rem;
+}
+
+.form-grid label {
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
+}
+
+.form-grid .label {
+	line-height: 1.1rem;
+	text-wrap: balance;
+}
+
+.form-grid .pass-fail {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.form-grid .pass-fail label {
+	display: flex;
+}
+
+.form-grid input[type="radio"] {
+	/* Prevent the radio from affecting grid layout */
+	vertical-align: middle;
+}
+
+/* Comment field container */
+.comment-field-container {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.comment-field-container label {
+	cursor: pointer;
+	font-weight: normal;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.comment-field-container input[type="checkbox"] {
+	margin: 0;
+}
+
+/* Field with link styling */
+.field.field-with-link {
+	position: relative;
+}
+
+.field.field-with-link a {
+	position: absolute;
+	right: 10px;
+	top: 35px;
+	font-size: 0.9em;
+}
+
+/* Muted state for N/A toggled fields */
+.muted {
+	opacity: 0.4;
+}
+
+/* Form actions (submit button + secondary link) */
+.form-actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+/* Secondary button styling */
+.secondary[role="button"],
+a.secondary[role="button"] {
+	background: var(--color-bg);
+	color: var(--color-link);
+}

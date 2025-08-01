@@ -1,0 +1,208 @@
+/* Form Grid Layouts
+ * Provides flexible grid layouts for various form field combinations
+ */
+
+.form-grid {
+	display: grid;
+	gap: 1rem;
+	align-items: end;
+	padding-top: 1rem;
+}
+
+legend + .form-grid {
+	border-top: none;
+}
+
+/* Radio + Comment grid layout */
+.radio-comment {
+	grid-template-areas:
+		"label label"
+		"pass-fail comment-label"
+		"comment comment";
+	grid-template-columns: auto 1fr;
+	align-items: center;
+}
+
+@media (min-width: 768px) {
+	.radio-comment {
+		grid-template-areas:
+			"label pass-fail comment-space comment-label"
+			"comment comment comment comment";
+		grid-template-columns: max-content auto 1fr auto;
+	}
+}
+
+.radio-comment > .label {
+	grid-area: label;
+}
+
+.radio-comment > .label label {
+	flex-direction: column;
+}
+
+.radio-comment > .pass-fail {
+	grid-area: pass-fail;
+}
+
+.radio-comment > .comment-checkbox {
+	grid-area: comment-label;
+}
+
+.radio-comment > textarea {
+	grid-area: comment;
+}
+
+/* Number + Pass/Fail + Comment grid layout */
+.number-radio-comment {
+	grid-template-areas:
+		"label label"
+		"number pass-fail"
+		"comment-label comment-space"
+		"comment comment";
+	grid-template-columns: auto 1fr;
+}
+
+@media (min-width: 768px) {
+	.number-radio-comment {
+		grid-template-areas:
+			"label label label label"
+			"number pass-fail comment-space comment-label"
+			"comment comment comment comment";
+		grid-template-columns: auto auto 1fr auto;
+	}
+}
+
+.number-radio-comment > .label {
+	grid-area: label;
+}
+
+.number-radio-comment > .label label {
+	flex-direction: column;
+}
+
+.number-radio-comment > .number {
+	grid-area: number;
+}
+
+.number-radio-comment > .pass-fail {
+	grid-area: pass-fail;
+}
+
+.number-radio-comment > .comment-checkbox {
+	grid-area: comment-label;
+}
+
+.number-radio-comment > textarea {
+	grid-area: comment;
+}
+
+/* Number + Comment grid layout */
+.number-comment {
+	grid-template-areas:
+		"label label"
+		"number comment-label"
+		"comment comment";
+	grid-template-columns: min-content auto;
+	align-items: center;
+}
+
+@media (min-width: 768px) {
+	.number-comment {
+		grid-template-areas:
+			"label number comment-space comment-label"
+			"comment comment comment comment";
+		grid-template-columns: max-content 6rem 1fr auto;
+	}
+}
+
+.number-comment > .label {
+	grid-area: label;
+	width: 14rem;
+}
+
+.number-comment > .number {
+	grid-area: number;
+}
+
+.number-comment > .comment-checkbox {
+	grid-area: comment-label;
+}
+
+.number-comment > textarea {
+	grid-area: comment;
+}
+
+/* Checkbox + Comment grid layout */
+.checkbox-comment {
+	display: grid;
+	gap: 0.5rem;
+	align-items: center;
+	margin-bottom: 1rem;
+	grid-template-areas:
+		"label label label label"
+		"check1 label2 comment-space comment-label";
+	grid-template-columns: auto auto 1fr auto;
+}
+
+@media (min-width: 768px) {
+	.checkbox-comment {
+		grid-template-areas: "label check1 label2 comment-label";
+		grid-template-columns: max-content auto auto auto;
+	}
+}
+
+.checkbox-comment > .label {
+	grid-area: label;
+}
+
+.checkbox-comment > .checkbox {
+	grid-area: check1;
+}
+
+.checkbox-comment > .checkbox-label {
+	grid-area: label2;
+}
+
+.checkbox-comment > .comment-checkbox {
+	grid-area: comment-label;
+}
+
+.checkbox-comment > textarea {
+	grid-column: 1 / -1;
+	margin-top: 0.5rem;
+}
+
+/* Simple number layout */
+.number {
+	grid-template-area: "label number";
+	grid-template-columns: auto min-content;
+	align-items: center;
+}
+
+.number-comment > .label {
+	grid-area: label;
+}
+
+.number-comment > .number {
+	grid-area: number;
+	width: 14rem;
+}
+
+/* User capacity flexbox layout */
+fieldset#user_capacity {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+/* Mobile: 2 columns (2 rows of 2) */
+fieldset#user_capacity > * {
+	flex: 1 1 calc(50% - 0.5rem);
+}
+
+/* Desktop: 4 columns (1 row of 4) */
+@media (min-width: 768px) {
+	fieldset#user_capacity > * {
+		flex: 1 1 calc(25% - 0.75rem);
+	}
+}
