@@ -1,0 +1,73 @@
+/* Flash Messages
+ * Styles for success, error, notice, and alert messages
+ */
+
+.success,
+.error,
+.notice,
+.alert {
+	width: 30rem;
+	max-width: 90%;
+	margin: 2rem auto;
+	text-align: left;
+	padding: 1rem;
+	border-radius: 8px;
+	font-weight: 500;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	animation: fadeIn 0.5s ease-in;
+}
+
+.success {
+	background: linear-gradient(135deg, #e8f5e8 0%, #f0fff0 100%);
+	border: 1px solid #90ee90;
+	color: #2d5016;
+}
+
+.notice {
+	background: linear-gradient(135deg, #e8f8ff 0%, #b6f5ff 100%);
+	border: 1px solid #b8e4ff;
+	color: #505f84;
+}
+
+.error {
+	background: linear-gradient(135deg, #ffe8e8 0%, #fff0f0 100%);
+	border: 1px solid #ffb3b3;
+	color: #cc0000;
+}
+
+.alert {
+	background: linear-gradient(135deg, #fff3cd 0%, #fffae5 100%);
+	border: 1px solid #ffd700;
+	color: #856404;
+}
+
+.error ul {
+	margin: 0.5rem 0 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.error li {
+	margin: 0.25rem 0;
+	padding-left: 1rem;
+	position: relative;
+}
+
+.error li:before {
+	content: "•";
+	position: absolute;
+	left: 0;
+	color: #cc0000;
+	font-weight: bold;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}

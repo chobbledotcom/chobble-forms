@@ -17,5 +17,12 @@ module ChobbleForms
         include ChobbleForms::Helpers
       end
     end
+
+    # Asset pipeline configuration
+    initializer "chobble_forms.assets.precompile" do |app|
+      app.config.assets.precompile += %w[chobble_forms.css]
+    end
+
+    config.assets.paths << File.expand_path("../../app/assets/stylesheets", __dir__)
   end
 end
