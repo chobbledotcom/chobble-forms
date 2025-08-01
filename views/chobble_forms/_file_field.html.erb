@@ -12,7 +12,7 @@
 <%= setup[:form_object].label field, setup[:field_label] %>
 <%= setup[:form_object].file_field field, accept: accept %>
 
-<% if current_file&.attached? %>
+<% if current_file&.attached? && model.persisted? %>
   <div class="file-preview" style="margin-top: 10px;">
     <% if current_file.image? %>
       <%= image_tag current_file.variant(resize_to_limit: [preview_size, preview_size]),
