@@ -20,8 +20,10 @@ module ChobbleForms
 
     # Asset pipeline configuration
     initializer "chobble_forms.assets" do |app|
-      app.config.assets.paths << root.join("app/assets/stylesheets")
-      app.config.assets.precompile += %w[chobble_forms.css]
+      if app.config.respond_to?(:assets) && app.config.assets
+        app.config.assets.paths << root.join("app/assets/stylesheets")
+        app.config.assets.precompile += %w[chobble_forms.css]
+      end
     end
   end
 end
