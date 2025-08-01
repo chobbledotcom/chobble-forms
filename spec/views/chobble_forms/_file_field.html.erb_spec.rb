@@ -43,6 +43,29 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
     end
   end
 
+  context "when file is attached but model is not persisted" do
+    let(:attachment) { double("attachment") }
+    let(:blob) { double("blob") }
+
+    before do
+      allow(attachment).to receive(:attached?).and_return(true)
+      allow(attachment).to receive(:blob).and_return(blob)
+      allow(attachment).to receive(:filename).and_return("test.jpg")
+      allow(attachment).to receive(:image?).and_return(true)
+      allow(mock_object).to receive(:respond_to?).with(:photo).and_return(true)
+      allow(mock_object).to receive(:photo).and_return(attachment)
+      allow(mock_object).to receive(:persisted?).and_return(false)
+    end
+
+    it "does not render preview for new records" do
+      render "chobble_forms/file_field", field: field
+
+      expect(rendered).to have_text("Photo")
+      expect(rendered).to have_selector('input[type="file"][name="photo"]')
+      expect(rendered).not_to have_selector(".file-preview")
+    end
+  end
+
   context "when file is attached" do
     let(:attachment) { double("attachment") }
     let(:blob) { double("blob") }
@@ -62,6 +85,7 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
       allow(service).to receive(:exist?).and_return(true)
       allow(mock_object).to receive(:respond_to?).with(:photo).and_return(true)
       allow(mock_object).to receive(:photo).and_return(attachment)
+      allow(mock_object).to receive(:persisted?).and_return(true)
     end
 
     context "with image file and preview enabled" do
