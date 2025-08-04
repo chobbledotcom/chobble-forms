@@ -17,7 +17,7 @@ RSpec.describe "Sorbet Integration" do
       # Check that signature methods are defined when Sorbet is available
       helper_class = Class.new { include ChobbleForms::Helpers }
       helper = helper_class.new
-      
+
       # These methods should still work even with signatures
       expect(helper).to respond_to(:form_field_setup)
       expect(helper).to respond_to(:get_field_value_and_prefilled_status)
@@ -42,12 +42,12 @@ RSpec.describe "Sorbet Integration" do
       helper_class = Class.new do
         include ChobbleForms::Helpers
         attr_accessor :_current_form, :_current_i18n_base
-        
+
         def t(key, options = {})
           "Translated: #{key}"
         end
       end
-      
+
       helper = helper_class.new
       expect(helper).to respond_to(:form_field_setup)
       expect(helper).to respond_to(:radio_button_options)
