@@ -2,14 +2,10 @@
 # frozen_string_literal: true
 
 require "sorbet-runtime"
-require "action_view"
 
 module ChobbleForms
   module Helpers
     extend T::Sig
-    include ActionView::Helpers::NumberHelper
-    include ActionView::Helpers::TranslationHelper
-    include Kernel
 
     sig { params(field: T.any(Symbol, String), local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
     def form_field_setup(field, local_assigns)
@@ -88,7 +84,7 @@ module ChobbleForms
 
     sig { params(local_assigns: T::Hash[Symbol, T.untyped]).void }
     def validate_local_assigns(local_assigns)
-      if local_assigns[:field] && local_assigns[:field].respond_to?(:to_s) &&
+      if local_assigns[:field]&.respond_to?(:to_s) &&
           local_assigns[:field].to_s.match?(/^[A-Z]/)
         raise ArgumentError, "Field names must be snake_case symbols, not class names. Use :field, not Field."
       end
