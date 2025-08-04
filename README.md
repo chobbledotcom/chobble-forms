@@ -32,6 +32,14 @@ Or use the provided Rake task:
 bundle exec rake typecheck
 ```
 
+### Development Setup
+
+For contributors working on this gem:
+
+1. Install dependencies: `bundle install`
+2. Generate RBI files: `bundle exec rake sorbet_rbi`
+3. Run type checking: `bundle exec rake typecheck`
+
 ## CSS Styles
 
 ChobbleForms includes CSS for styling the form components. To use the included styles, add this to your application.css:
