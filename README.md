@@ -16,6 +16,22 @@ And then execute:
 bundle install
 ```
 
+## Type Safety with Sorbet
+
+ChobbleForms includes full Sorbet type signatures for improved type safety and better IDE support. The gem uses `typed: strict` for all library files.
+
+To run type checking in your development environment:
+
+```bash
+bundle exec srb tc
+```
+
+Or use the provided Rake task:
+
+```bash
+bundle exec rake typecheck
+```
+
 ## CSS Styles
 
 ChobbleForms includes CSS for styling the form components. To use the included styles, add this to your application.css:

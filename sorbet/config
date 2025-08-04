@@ -1,0 +1,9 @@
+--dir
+.
+--ignore=tmp/
+--ignore=vendor/
+--ignore=spec/
+--ignore=.git/
+--ignore=log/
+--ignore=node_modules/
+--enable-experimental-requires-ancestor
