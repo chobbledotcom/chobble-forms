@@ -10,7 +10,7 @@ module ChobbleForms
     include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TranslationHelper
     include Kernel
-    
+
     sig { params(field: T.any(Symbol, String), local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
     def form_field_setup(field, local_assigns)
       validate_local_assigns(local_assigns)
@@ -131,7 +131,7 @@ module ChobbleForms
     def build_field_setup_result(field_translations, value, prefilled)
       form_obj = T.unsafe(instance_variable_get(:@_current_form))
       i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
-      
+
       {
         form_object: form_obj,
         i18n_base: i18n_base,
