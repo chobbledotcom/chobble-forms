@@ -2,14 +2,10 @@
 # frozen_string_literal: true
 
 require "sorbet-runtime"
-require "action_view"
 
 module ChobbleForms
   module Helpers
     extend T::Sig
-    include ActionView::Helpers::NumberHelper
-    include ActionView::Helpers::TranslationHelper
-    include Kernel
 
     sig { params(field: T.any(Symbol, String), local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
     def form_field_setup(field, local_assigns)
