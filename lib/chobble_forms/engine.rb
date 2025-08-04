@@ -1,9 +1,9 @@
 # typed: strict
-require "sorbet-runtime"
+# frozen_string_literal: true
 
 module ChobbleForms
   class Engine < ::Rails::Engine
-    extend T::Sig
+    extend T::Sig if defined?(T::Sig)
     isolate_namespace ChobbleForms
 
     initializer "chobble_forms.add_view_paths" do |app|

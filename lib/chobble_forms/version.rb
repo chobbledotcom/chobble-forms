@@ -1,8 +1,6 @@
 # typed: strict
-require "sorbet-runtime"
+# frozen_string_literal: true
 
 module ChobbleForms
-  extend T::Sig
-  
-  VERSION = T.let("0.5.1", String)
+  VERSION = "0.5.1"
 end

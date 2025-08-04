@@ -1,30 +1,36 @@
 # typed: strict
-require "sorbet-runtime"
+# frozen_string_literal: true
+
 require "action_view"
 
 module ChobbleForms
   module Helpers
-    extend T::Sig
+    extend T::Sig if defined?(T::Sig)
     include ActionView::Helpers::NumberHelper
     
     # Rails I18n helper - this is mixed in from ActionView
-    sig { params(key: String, options: T::Hash[Symbol, T.untyped]).returns(String) }
+    if defined?(T::Sig)
+      sig { params(key: String, options: T::Hash[Symbol, T.untyped]).returns(String) }
+    end
     def t(key, options = {}); end
-    sig { params(field: T.any(Symbol, String), local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
+    
+    if defined?(T::Sig)
+      sig { params(field: T.any(Symbol, String), local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
+    end
     def form_field_setup(field, local_assigns)
       validate_local_assigns(local_assigns)
       validate_form_context
 
       field_translations = build_field_translations(field)
-      value, prefilled = get_field_value_and_prefilled_status(
-        T.unsafe(instance_variable_get(:@_current_form)),
-        field
-      )
+      form_obj = defined?(T) ? T.unsafe(instance_variable_get(:@_current_form)) : instance_variable_get(:@_current_form)
+      value, prefilled = get_field_value_and_prefilled_status(form_obj, field)
 
       build_field_setup_result(field_translations, value, prefilled)
     end
 
-    sig { params(form_object: T.nilable(T.untyped), field: T.any(Symbol, String)).returns([T.untyped, T::Boolean]) }
+    if defined?(T::Sig)
+      sig { params(form_object: T.nilable(T.untyped), field: T.any(Symbol, String)).returns([T.untyped, T::Boolean]) }
+    end
     def get_field_value_and_prefilled_status(form_object, field)
       return [nil, false] unless form_object&.object
       model = form_object.object
@@ -32,7 +38,9 @@ module ChobbleForms
       [resolved[:value], resolved[:prefilled]]
     end
 
-    sig { params(form: T.untyped, comment_field: T.any(Symbol, String), base_field_label: String).returns(T::Hash[Symbol, T.untyped]) }
+    if defined?(T::Sig)
+      sig { params(form: T.untyped, comment_field: T.any(Symbol, String), base_field_label: String).returns(T::Hash[Symbol, T.untyped]) }
+    end
     def comment_field_options(form, comment_field, base_field_label)
       raise ArgumentError, "form_object required" unless form
       model = form.object
@@ -66,14 +74,16 @@ module ChobbleForms
       }
     end
 
-    sig { params(prefilled: T::Boolean, checked_value: T.untyped, expected_value: T.untyped).returns(T::Hash[Symbol, T::Boolean]) }
+    if defined?(T::Sig)
+      sig { params(prefilled: T::Boolean, checked_value: T.untyped, expected_value: T.untyped).returns(T::Hash[Symbol, T::Boolean]) }
+    end
     def radio_button_options(prefilled, checked_value, expected_value)
       (prefilled && checked_value == expected_value) ? {checked: true} : {}
     end
 
     private
 
-    ALLOWED_LOCAL_ASSIGNS = T.let(%i[
+    ALLOWED_LOCAL_ASSIGNS = %i[
       accept
       field
       max
@@ -85,9 +95,11 @@ module ChobbleForms
       rows
       step
       type
-    ], T::Array[Symbol])
+    ]
 
-    sig { params(local_assigns: T.nilable(T::Hash[Symbol, T.untyped])).void }
+    if defined?(T::Sig)
+      sig { params(local_assigns: T.nilable(T::Hash[Symbol, T.untyped])).void }
+    end
     def validate_local_assigns(local_assigns)
       if local_assigns[:field].present? &&
           local_assigns[:field].to_s.match?(/^[A-Z]/)
@@ -102,17 +114,21 @@ module ChobbleForms
       end
     end
 
-    sig { void }
+    if defined?(T::Sig)
+      sig { void }
+    end
     def validate_form_context
-      i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
-      form_obj = T.unsafe(instance_variable_get(:@_current_form))
+      i18n_base = defined?(T) ? T.unsafe(instance_variable_get(:@_current_i18n_base)) : instance_variable_get(:@_current_i18n_base)
+      form_obj = defined?(T) ? T.unsafe(instance_variable_get(:@_current_form)) : instance_variable_get(:@_current_form)
       raise ArgumentError, "missing i18n_base" unless i18n_base
       raise ArgumentError, "missing form_object" unless form_obj
     end
 
-    sig { params(field: T.any(Symbol, String)).returns(T::Hash[Symbol, T.nilable(String)]) }
+    if defined?(T::Sig)
+      sig { params(field: T.any(Symbol, String)).returns(T::Hash[Symbol, T.nilable(String)]) }
+    end
     def build_field_translations(field)
-      i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
+      i18n_base = defined?(T) ? T.unsafe(instance_variable_get(:@_current_i18n_base)) : instance_variable_get(:@_current_i18n_base)
       fields_key = "#{i18n_base}.fields.#{field}"
       field_label = t(fields_key, raise: true)
 
@@ -128,17 +144,24 @@ module ChobbleForms
       }
     end
 
-    sig { params(field_translations: T::Hash[Symbol, T.nilable(String)], value: T.untyped, prefilled: T::Boolean).returns(T::Hash[Symbol, T.untyped]) }
+    if defined?(T::Sig)
+      sig { params(field_translations: T::Hash[Symbol, T.nilable(String)], value: T.untyped, prefilled: T::Boolean).returns(T::Hash[Symbol, T.untyped]) }
+    end
     def build_field_setup_result(field_translations, value, prefilled)
+      form_obj = defined?(T) ? T.unsafe(instance_variable_get(:@_current_form)) : instance_variable_get(:@_current_form)
+      i18n_base = defined?(T) ? T.unsafe(instance_variable_get(:@_current_i18n_base)) : instance_variable_get(:@_current_i18n_base)
+      
       {
-        form_object: T.unsafe(instance_variable_get(:@_current_form)),
-        i18n_base: T.unsafe(instance_variable_get(:@_current_i18n_base)),
+        form_object: form_obj,
+        i18n_base: i18n_base,
         value:,
         prefilled:
       }.merge(field_translations)
     end
 
-    sig { params(model: T.untyped, field: T.any(Symbol, String)).returns(T::Hash[Symbol, T.untyped]) }
+    if defined?(T::Sig)
+      sig { params(model: T.untyped, field: T.any(Symbol, String)).returns(T::Hash[Symbol, T.untyped]) }
+    end
     def resolve_field_value(model, field)
       field_str = field.to_s
 
@@ -157,7 +180,7 @@ module ChobbleForms
       end
 
       # Extract previous value if available
-      prev_inspection = T.unsafe(instance_variable_get(:@previous_inspection))
+      prev_inspection = defined?(T) ? T.unsafe(instance_variable_get(:@previous_inspection)) : instance_variable_get(:@previous_inspection)
       previous_value = extract_previous_value(prev_inspection, model, field)
 
       # Return previous value if current is nil and previous exists
@@ -176,7 +199,9 @@ module ChobbleForms
       end
     end
 
-    sig { params(previous_inspection: T.untyped, current_model: T.untyped, field: T.any(Symbol, String)).returns(T.untyped) }
+    if defined?(T::Sig)
+      sig { params(previous_inspection: T.untyped, current_model: T.untyped, field: T.any(Symbol, String)).returns(T.untyped) }
+    end
     def extract_previous_value(previous_inspection, current_model, field)
       if !previous_inspection
         nil
@@ -189,7 +214,9 @@ module ChobbleForms
       end
     end
 
-    sig { params(value: T.untyped).returns(T.untyped) }
+    if defined?(T::Sig)
+      sig { params(value: T.untyped).returns(T.untyped) }
+    end
     def format_numeric_value(value)
       if value.is_a?(String) &&
           value.match?(/\A-?\d*\.?\d+\z/) &&
@@ -206,12 +233,16 @@ module ChobbleForms
       )
     end
 
-    sig { params(value: T.untyped).returns(T.nilable(String)) }
+    if defined?(T::Sig)
+      sig { params(value: T.untyped).returns(T.nilable(String)) }
+    end
     def strip_trailing_zeros(value)
       value&.to_s&.sub(/\.0+$/, "")
     end
 
-    sig { params(model: T.untyped, field_str: String).returns(T::Hash[Symbol, T.untyped]) }
+    if defined?(T::Sig)
+      sig { params(model: T.untyped, field_str: String).returns(T::Hash[Symbol, T.untyped]) }
+    end
     def resolve_association_value(model, field_str)
       base_name = field_str.chomp("_id")
       association_name = base_name.to_sym
