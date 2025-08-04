@@ -1,19 +1,29 @@
+# typed: strict
+# frozen_string_literal: true
+
+require "sorbet-runtime"
 require "action_view"
 
 module ChobbleForms
   module Helpers
+    extend T::Sig
     include ActionView::Helpers::NumberHelper
+    include ActionView::Helpers::TranslationHelper
+    include Kernel
+
+    sig { params(field: T.any(Symbol, String), local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
     def form_field_setup(field, local_assigns)
       validate_local_assigns(local_assigns)
       validate_form_context
 
       field_translations = build_field_translations(field)
-      value, prefilled = get_field_value_and_prefilled_status(@_current_form,
-        field)
+      form_obj = T.unsafe(instance_variable_get(:@_current_form))
+      value, prefilled = get_field_value_and_prefilled_status(form_obj, field)
 
       build_field_setup_result(field_translations, value, prefilled)
     end
 
+    sig { params(form_object: T.untyped, field: T.any(Symbol, String)).returns([T.untyped, T::Boolean]) }
     def get_field_value_and_prefilled_status(form_object, field)
       return [nil, false] unless form_object&.object
       model = form_object.object
@@ -21,6 +31,7 @@ module ChobbleForms
       [resolved[:value], resolved[:prefilled]]
     end
 
+    sig { params(form: T.untyped, comment_field: T.any(Symbol, String), base_field_label: String).returns(T::Hash[Symbol, T.untyped]) }
     def comment_field_options(form, comment_field, base_field_label)
       raise ArgumentError, "form_object required" unless form
       model = form.object
@@ -54,13 +65,14 @@ module ChobbleForms
       }
     end
 
+    sig { params(prefilled: T::Boolean, checked_value: T.untyped, expected_value: T.untyped).returns(T::Hash[Symbol, T::Boolean]) }
     def radio_button_options(prefilled, checked_value, expected_value)
       (prefilled && checked_value == expected_value) ? {checked: true} : {}
     end
 
     private
 
-    ALLOWED_LOCAL_ASSIGNS = %i[
+    ALLOWED_LOCAL_ASSIGNS = T.let(%i[
       accept
       field
       max
@@ -72,15 +84,16 @@ module ChobbleForms
       rows
       step
       type
-    ]
+    ], T::Array[Symbol])
 
+    sig { params(local_assigns: T::Hash[Symbol, T.untyped]).void }
     def validate_local_assigns(local_assigns)
-      if local_assigns[:field].present? &&
+      if local_assigns[:field] && local_assigns[:field].respond_to?(:to_s) &&
           local_assigns[:field].to_s.match?(/^[A-Z]/)
         raise ArgumentError, "Field names must be snake_case symbols, not class names. Use :field, not Field."
       end
 
-      locally_assigned_keys = (local_assigns || {}).keys
+      locally_assigned_keys = local_assigns.keys
       disallowed_keys = locally_assigned_keys - ALLOWED_LOCAL_ASSIGNS
 
       if disallowed_keys.any?
@@ -88,16 +101,21 @@ module ChobbleForms
       end
     end
 
+    sig { void }
     def validate_form_context
-      raise ArgumentError, "missing i18n_base" unless @_current_i18n_base
-      raise ArgumentError, "missing form_object" unless @_current_form
+      i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
+      form_obj = T.unsafe(instance_variable_get(:@_current_form))
+      raise ArgumentError, "missing i18n_base" unless i18n_base
+      raise ArgumentError, "missing form_object" unless form_obj
     end
 
+    sig { params(field: T.any(Symbol, String)).returns(T::Hash[Symbol, T.nilable(String)]) }
     def build_field_translations(field)
-      fields_key = "#{@_current_i18n_base}.fields.#{field}"
+      i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
+      fields_key = "#{i18n_base}.fields.#{field}"
       field_label = t(fields_key, raise: true)
 
-      base_parts = @_current_i18n_base.split(".")
+      base_parts = i18n_base.split(".")
       root = base_parts[0..-2]
       hint_key = (root + ["hints", field]).join(".")
       placeholder_key = (root + ["placeholders", field]).join(".")
@@ -109,15 +127,20 @@ module ChobbleForms
       }
     end
 
+    sig { params(field_translations: T::Hash[Symbol, T.nilable(String)], value: T.untyped, prefilled: T::Boolean).returns(T::Hash[Symbol, T.untyped]) }
     def build_field_setup_result(field_translations, value, prefilled)
+      form_obj = T.unsafe(instance_variable_get(:@_current_form))
+      i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
+
       {
-        form_object: @_current_form,
-        i18n_base: @_current_i18n_base,
+        form_object: form_obj,
+        i18n_base: i18n_base,
         value:,
         prefilled:
       }.merge(field_translations)
     end
 
+    sig { params(model: T.untyped, field: T.any(Symbol, String)).returns(T::Hash[Symbol, T.untyped]) }
     def resolve_field_value(model, field)
       field_str = field.to_s
 
@@ -136,7 +159,8 @@ module ChobbleForms
       end
 
       # Extract previous value if available
-      previous_value = extract_previous_value(@previous_inspection, model, field)
+      prev_inspection = T.unsafe(instance_variable_get(:@previous_inspection))
+      previous_value = extract_previous_value(prev_inspection, model, field)
 
       # Return previous value if current is nil and previous exists
       if current_value.nil? && !previous_value.nil?
@@ -154,6 +178,7 @@ module ChobbleForms
       end
     end
 
+    sig { params(previous_inspection: T.untyped, current_model: T.untyped, field: T.any(Symbol, String)).returns(T.untyped) }
     def extract_previous_value(previous_inspection, current_model, field)
       if !previous_inspection
         nil
@@ -166,6 +191,7 @@ module ChobbleForms
       end
     end
 
+    sig { params(value: T.untyped).returns(T.untyped) }
     def format_numeric_value(value)
       if value.is_a?(String) &&
           value.match?(/\A-?\d*\.?\d+\z/) &&
@@ -182,10 +208,12 @@ module ChobbleForms
       )
     end
 
+    sig { params(value: T.untyped).returns(T.nilable(String)) }
     def strip_trailing_zeros(value)
       value&.to_s&.sub(/\.0+$/, "")
     end
 
+    sig { params(model: T.untyped, field_str: String).returns(T::Hash[Symbol, T.untyped]) }
     def resolve_association_value(model, field_str)
       base_name = field_str.chomp("_id")
       association_name = base_name.to_sym
