@@ -7,13 +7,14 @@ module ChobbleForms
   module Helpers
     extend T::Sig if defined?(T::Sig)
     include ActionView::Helpers::NumberHelper
-    
+
     # Rails I18n helper - this is mixed in from ActionView
     if defined?(T::Sig)
       sig { params(key: String, options: T::Hash[Symbol, T.untyped]).returns(String) }
     end
-    def t(key, options = {}); end
-    
+    def t(key, options = {})
+    end
+
     if defined?(T::Sig)
       sig { params(field: T.any(Symbol, String), local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
     end
@@ -150,7 +151,7 @@ module ChobbleForms
     def build_field_setup_result(field_translations, value, prefilled)
       form_obj = defined?(T) ? T.unsafe(instance_variable_get(:@_current_form)) : instance_variable_get(:@_current_form)
       i18n_base = defined?(T) ? T.unsafe(instance_variable_get(:@_current_i18n_base)) : instance_variable_get(:@_current_i18n_base)
-      
+
       {
         form_object: form_obj,
         i18n_base: i18n_base,
