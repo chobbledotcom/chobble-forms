@@ -18,27 +18,36 @@ bundle install
 
 ## Type Safety with Sorbet
 
-ChobbleForms includes full Sorbet type signatures for improved type safety and better IDE support. The gem uses `typed: strict` for all library files.
+ChobbleForms includes full Sorbet type signatures for improved type safety and better IDE support. The gem uses `typed: strict` for all library files and gracefully degrades when Sorbet is not available.
 
-To run type checking in your development environment:
+### Using Sorbet in Your Application
 
-```bash
-bundle exec srb tc
-```
+To enable type checking when using ChobbleForms in your Rails application:
 
-Or use the provided Rake task:
+1. Add Sorbet to your Gemfile:
+   ```ruby
+   gem 'sorbet-runtime'
+   group :development do
+     gem 'sorbet'
+     gem 'tapioca'
+   end
+   ```
 
-```bash
-bundle exec rake typecheck
-```
+2. Run type checking:
+   ```bash
+   bundle exec srb tc
+   ```
 
 ### Development Setup
 
 For contributors working on this gem:
 
 1. Install dependencies: `bundle install`
-2. Generate RBI files: `bundle exec rake sorbet_rbi`
-3. Run type checking: `bundle exec rake typecheck`
+2. Add Sorbet gems manually: `bundle add sorbet-runtime sorbet tapioca`
+3. Generate RBI files: `bundle exec rake sorbet_rbi`
+4. Run type checking: `bundle exec rake typecheck`
+
+Note: The gem works perfectly without Sorbet installed. Type signatures are only active when `sorbet-runtime` is available.
 
 ## CSS Styles
 
