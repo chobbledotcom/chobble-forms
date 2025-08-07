@@ -19,6 +19,9 @@ module ChobbleFormsTest
     config.load_defaults Rails::VERSION::STRING.to_f
     config.eager_load = false
     config.secret_key_base = "test-secret-key-base"
+    
+    # Set the root to the gem directory to avoid loading parent app config
+    config.root = Pathname.new(__dir__).parent
 
     # Minimal middleware stack
     config.middleware.delete ActionDispatch::Cookies
