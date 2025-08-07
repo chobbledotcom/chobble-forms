@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir["{app,lib,views}/**/*", "README.md", "LICENSE", "CHANGELOG.md"]
 
-  spec.add_dependency "rails", ">= 7.0.0"
+  spec.add_dependency "rails", ">= 8.0.0"
   spec.add_dependency "sorbet-runtime", "~> 0.5"
 
   spec.add_development_dependency "bundler", "~> 2.0"
