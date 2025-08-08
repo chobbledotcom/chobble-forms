@@ -51,14 +51,12 @@
     required: number_options[:required],
     placeholder: field_data[:field_placeholder],
     value: number_options[:value],
-    class: "number"
-  %>
+    class: "number" %>
 
   <%= render 'chobble_forms/radio_pass_fail',
     field: pass_fail_field,
     prefilled: pass_fail_prefilled,
-    checked_value: pass_fail_checked
-  %>
+    checked_value: pass_fail_checked %>
 
   <%= render 'chobble_forms/comment_checkbox',
       comment_field: comment_field,
@@ -68,6 +66,5 @@
       prefilled: comment_info[:prefilled] %>
 
   <%= form.text_area comment_field,
-    comment_info[:options]
-  %>
+    comment_info[:options] %>
 </div>

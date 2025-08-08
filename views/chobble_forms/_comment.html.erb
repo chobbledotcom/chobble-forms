@@ -22,19 +22,16 @@
     <input type="checkbox" id="<%= checkbox_id %>"
       <%= 'checked' if has_content %>
       data-comment-toggle="<%= textarea_id %>"
-      data-comment-container="<%= textarea_id %>_container"
-    >
+      data-comment-container="<%= textarea_id %>_container">
     <%= t("shared.comment") %>
   </label>
 
   <div id="<%= textarea_id %>_container"
-    style="display: <%= has_content ? 'block' : 'none' %>"
-  >
+    style="display: <%= has_content ? 'block' : 'none' %>">
     <%= form.text_field field,
         maxlength: maxlength,
         placeholder: placeholder,
         id: textarea_id,
-        title: "Max #{maxlength} characters"
-    %>
+        title: "Max #{maxlength} characters" %>
   </div>
 </div>

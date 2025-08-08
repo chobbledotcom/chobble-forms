@@ -30,7 +30,7 @@
     form,
     pass_fail_field
   )
-  
+
   # Debug: Check if the model value is being read correctly
   model_value = model.send(pass_fail_field) if model.respond_to?(pass_fail_field)
   actual_value = pass_fail_prefilled ? pass_fail_value : model_value
@@ -42,7 +42,6 @@
     comment_field,
     field_data[:field_label]
   )
-
 %>
 
 <div class="form-grid number-radio-comment" id="<%= number_field %>">
@@ -58,15 +57,12 @@
     required: number_options[:required],
     placeholder: field_data[:field_placeholder],
     value: number_options[:value],
-    class: "number"
-  %>
+    class: "number" %>
 
   <%= render 'chobble_forms/radio_pass_fail',
     field: pass_fail_field,
     prefilled: pass_fail_prefilled && !na_checked,
-    checked_value: pass_fail_checked
-  %>
-
+    checked_value: pass_fail_checked %>
 
   <%= render 'chobble_forms/comment_checkbox',
       comment_field: comment_field,
@@ -76,6 +72,5 @@
       prefilled: comment_info[:prefilled] %>
 
   <%= form.text_area comment_field,
-    comment_info[:options]
-  %>
+    comment_info[:options] %>
 </div>

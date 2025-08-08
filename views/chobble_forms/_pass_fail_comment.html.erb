@@ -32,16 +32,14 @@
   <%= render 'chobble_forms/radio_pass_fail',
     field: field,
     prefilled: field_data[:prefilled],
-    checked_value: checked_value
-  %>
+    checked_value: checked_value %>
 
   <%= render 'chobble_forms/comment_checkbox',
     comment_field: comment_field,
     checkbox_id: comment_info[:checkbox_id],
     textarea_id: comment_info[:options][:id],
     has_comment: comment_info[:has_comment],
-    prefilled: comment_info[:prefilled]
-  %>
+    prefilled: comment_info[:prefilled] %>
 
   <%= form.text_area comment_field, comment_info[:options] %>
 </div>
