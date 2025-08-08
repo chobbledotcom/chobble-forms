@@ -16,7 +16,7 @@
     # Non-model forms need explicit URL and default to POST
     method ||= :post
   end
-  
+
   # Check if local form submission is requested
   use_local = local_assigns[:local] || false
 %>
@@ -25,7 +25,7 @@
   url: url,
   method: method,
   local: use_local,
-  html: { 
+  html: {
     multipart: true
   }
 } %>
@@ -46,8 +46,7 @@ end %>
 
 <%= form_with(**form_options) do |form| %>
   <%= render "chobble_forms/header",
-    title: I18n.t("#{i18n_base}.header")
-  %>
+    title: I18n.t("#{i18n_base}.header") %>
 
   <% @_current_form = form %>
   <% @_current_i18n_base = i18n_base %>

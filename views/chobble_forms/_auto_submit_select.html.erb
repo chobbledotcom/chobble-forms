@@ -2,7 +2,7 @@
   # Auto-submit select field options
   field = local_assigns[:field] or raise ArgumentError, "field is required for auto submit select"
   options = local_assigns[:options] or raise ArgumentError, "options is required for auto submit select"
-  
+
   # Check if we're in a form context with form object or need standalone
   if local_assigns[:form]
     form_object = local_assigns[:form]
@@ -12,7 +12,7 @@
     url = local_assigns[:url] or raise ArgumentError, "url is required for standalone auto submit select"
     selected_value = params[field]
   end
-  
+
   # Optional parameters
   label = local_assigns[:label]
   include_blank = local_assigns[:include_blank]
@@ -25,31 +25,31 @@
   <% if label %>
     <%= form_object.label field, label %>
   <% end %>
-  
+
   <%= form_object.select field,
       options_for_select(options, selected_value),
       include_blank ? { include_blank: blank_text } : {},
       { onchange: "this.form.submit();" } %>
-      
+
 <% else %>
   <!-- Standalone auto-submit select form -->
   <%= form_with url: url, method: :get, data: (turbo_disabled ? { turbo: false } : {}) do |form| %>
-    
+
     <!-- Preserve other parameters -->
     <% preserve_params.each do |param| %>
       <% if params[param].present? %>
         <%= form.hidden_field param, value: params[param] %>
       <% end %>
     <% end %>
-    
+
     <% if label %>
       <%= form.label field, label %>
     <% end %>
-    
+
     <%= form.select field,
         options_for_select(options, selected_value),
         include_blank ? { include_blank: blank_text } : {},
         { onchange: "this.form.submit();" } %>
-        
+
   <% end %>
 <% end %>
