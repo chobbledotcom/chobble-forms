@@ -1,1 +1,5 @@
-<%= @_current_form.submit t("#{@_current_i18n_base}.submit", raise: true) %>
+<%
+  submit_key = local_assigns[:submit_key] || "submit"
+  submit_text = t("#{@_current_i18n_base}.#{submit_key}", raise: true)
+%>
+<%= @_current_form.submit submit_text %>

@@ -58,14 +58,12 @@ end %>
   <% end %>
 
   <fieldset>
-    <% if local_assigns[:secondary_link_url].present? && local_assigns[:secondary_link_text].present? %>
-      <div class="form-actions">
-        <%= render 'chobble_forms/submit_button' %>
+    <div class="form-actions">
+      <%= render 'chobble_forms/submit_button', submit_key: local_assigns[:submit_key] %>
+      <% if local_assigns[:secondary_link_url].present? && local_assigns[:secondary_link_text].present? %>
         <%= link_to secondary_link_text, secondary_link_url, role: "button", class: "secondary" %>
-      </div>
-    <% else %>
-      <%= render 'chobble_forms/submit_button' %>
-    <% end %>
+      <% end %>
+    </div>
   </fieldset>
 
   <%# Save message display for Turbo Streams %>
