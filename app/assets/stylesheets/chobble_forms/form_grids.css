@@ -215,3 +215,7 @@ fieldset#user_capacity > * {
   justify-content: start;
   align-items: center;
 }
+
+.simple input.number {
+  width: 6rem;
+}
