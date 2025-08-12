@@ -70,6 +70,7 @@ module ChobbleForms
 
     ALLOWED_LOCAL_ASSIGNS = T.let(%i[
       accept
+      add_not_applicable
       field
       max
       min

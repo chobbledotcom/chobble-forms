@@ -7,13 +7,16 @@
   #   max: Maximum value
   #   required: Whether the integer field is required (defaults to true)
   #   placeholder: Placeholder text
+  #   add_not_applicable: Whether to show a "Not Applicable" checkbox (defaults to false)
   #
   # This will render:
   #   - Integer field: field (e.g., 'trough_depth')
+  #   - Not Applicable checkbox: (if add_not_applicable is true)
   #   - Comment field: field + '_comment' (e.g., 'trough_depth_comment')
 
   integer_field = field
   comment_field = "#{field}_comment".to_sym
+  show_na_checkbox = local_assigns.fetch(:add_not_applicable, false)
 
   form = @_current_form
   model = form.object
@@ -36,6 +39,14 @@
   integer_options[:data][:min] = local_assigns[:min] if local_assigns[:min]
   integer_options[:data][:max] = local_assigns[:max] if local_assigns[:max]
 
+  # Check if value is 0 to determine N/A state
+  is_na = field_data[:value].to_i == 0
+  
+  # Disable input if N/A
+  if is_na && show_na_checkbox
+    integer_options[:disabled] = true
+  end
+
   comment_info = comment_field_options(
     form,
     comment_field,
@@ -46,6 +57,12 @@
 <div class="form-grid number-comment" id="<%= integer_field %>">
   <%= form.label integer_field, field_data[:field_label], class: "label" %>
   <%= form.text_field integer_field, integer_options %>
+  <% if show_na_checkbox %>
+    <label class="na-label">
+      <input type="checkbox"<%= is_na ? " checked" : "" %>>
+      <%= t("shared.not_applicable") %>
+    </label>
+  <% end %>
 
   <%= render 'chobble_forms/comment_checkbox',
       comment_field: comment_field,
