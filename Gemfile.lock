@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    chobble-forms (0.5.4)
+    chobble-forms (0.5.5)
       rails (>= 8.0.0)
       sorbet-runtime (~> 0.5)
 
