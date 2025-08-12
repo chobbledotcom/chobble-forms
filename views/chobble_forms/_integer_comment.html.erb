@@ -39,8 +39,8 @@
   integer_options[:data][:min] = local_assigns[:min] if local_assigns[:min]
   integer_options[:data][:max] = local_assigns[:max] if local_assigns[:max]
 
-  # Check if value is 0 to determine N/A state
-  is_na = field_data[:value].to_i == 0
+  # Check if value is 0 to determine N/A state (not nil)
+  is_na = field_data[:value].present? && field_data[:value].to_i == 0
   
   # Disable input if N/A
   if is_na && show_na_checkbox
