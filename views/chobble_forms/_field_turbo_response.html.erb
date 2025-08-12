@@ -1,0 +1,22 @@
+<%
+  # Generic Turbo response partial for any form field
+  # Required parameters:
+  #   model: The model object
+  #   field: The field name
+  #   partial: The field partial to render (e.g., 'number', 'text_field', etc.)
+  #   i18n_base: The i18n base path
+  # Optional parameters:
+  #   attributes: Hash of additional attributes to pass to the field partial
+  
+  model = local_assigns[:model]
+  field = local_assigns[:field]
+  partial = local_assigns[:partial]
+  i18n_base = local_assigns[:i18n_base]
+  attributes = local_assigns[:attributes] || {}
+%>
+
+<%= fields model: model, skip_default_ids: false do |form| %>
+  <% @_current_form = form %>
+  <% @_current_i18n_base = i18n_base %>
+  <%= render "chobble_forms/#{partial}", field: field, **attributes %>
+<% end %>
