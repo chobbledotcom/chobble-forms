@@ -54,22 +54,25 @@
   )
 %>
 
-<div class="form-grid number-comment" id="<%= integer_field %>">
+<div
+  class="form-grid simple"
+  id="<%= integer_field %>"
+>
   <%= form.label integer_field, field_data[:field_label], class: "label" %>
-  <%= form.text_field integer_field, integer_options %>
-  <% if show_na_checkbox %>
-    <label class="na-label">
-      <input type="checkbox"<%= is_na ? " checked" : "" %>>
-      <%= t("shared.not_applicable") %>
-    </label>
-  <% end %>
-
-  <%= render 'chobble_forms/comment_checkbox',
+  <div>
+    <%= form.text_field integer_field, integer_options %>
+    <% if show_na_checkbox %>
+      <label class="na-label">
+        <input type="checkbox"<%= is_na ? " checked" : "" %>>
+        <%= t("shared.not_applicable") %>
+      </label>
+    <% end %>
+    <%= render 'chobble_forms/comment_checkbox',
       comment_field: comment_field,
       checkbox_id: comment_info[:checkbox_id],
       textarea_id: comment_info[:options][:id],
       has_comment: comment_info[:has_comment],
       prefilled: comment_info[:prefilled] %>
-
+  </div>
   <%= form.text_area comment_field, comment_info[:options] %>
 </div>
