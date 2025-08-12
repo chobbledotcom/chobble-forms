@@ -41,7 +41,7 @@
 
   # Check if value is 0 to determine N/A state (not nil)
   is_na = field_data[:value].present? && field_data[:value].to_i == 0
-  
+
   # Disable input if N/A
   if is_na && show_na_checkbox
     integer_options[:disabled] = true
@@ -56,8 +56,7 @@
 
 <div
   class="form-grid simple"
-  id="<%= integer_field %>"
->
+  id="<%= integer_field %>">
   <%= form.label integer_field, field_data[:field_label], class: "label" %>
   <div>
     <%= form.text_field integer_field, integer_options %>
