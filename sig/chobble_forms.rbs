@@ -5,13 +5,13 @@ module ChobbleForms
 
   module Helpers
     # Main entry point for form field setup
-    def form_field_setup: (Symbol | String field, Hash[Symbol, untyped] local_assigns) -> Hash[Symbol, untyped]
+    def form_field_setup: (Symbol field, Hash[Symbol, untyped] local_assigns) -> Hash[Symbol, untyped]
     
     # Get field value and prefilled status from form object
-    def get_field_value_and_prefilled_status: (untyped form_object, Symbol | String field) -> [untyped, bool]
+    def get_field_value_and_prefilled_status: (untyped form_object, Symbol field) -> [untyped, bool]
     
     # Build options for comment fields
-    def comment_field_options: (untyped form, Symbol | String comment_field, String base_field_label) -> Hash[Symbol, untyped]
+    def comment_field_options: (untyped form, Symbol comment_field, String base_field_label) -> Hash[Symbol, untyped]
     
     # Build options for radio buttons
     def radio_button_options: (bool prefilled, untyped checked_value, untyped expected_value) -> Hash[Symbol, bool]
@@ -23,12 +23,12 @@ module ChobbleForms
     def validate_form_context: () -> void
     
     # Field translation helpers
-    def build_field_translations: (Symbol | String field) -> Hash[Symbol, String?]
+    def build_field_translations: (Symbol field) -> Hash[Symbol, String?]
     def build_field_setup_result: (Hash[Symbol, String?] field_translations, untyped value, bool prefilled) -> Hash[Symbol, untyped]
     
     # Value resolution
-    def resolve_field_value: (untyped model, Symbol | String field) -> Hash[Symbol, untyped]
-    def extract_previous_value: (untyped previous_inspection, untyped current_model, Symbol | String field) -> untyped
+    def resolve_field_value: (untyped model, Symbol field) -> Hash[Symbol, untyped]
+    def extract_previous_value: (untyped previous_inspection, untyped current_model, Symbol field) -> untyped
     def format_numeric_value: (untyped value) -> untyped
     def strip_trailing_zeros: (untyped value) -> String?
     def resolve_association_value: (untyped model, String field_str) -> Hash[Symbol, untyped]
@@ -36,21 +36,21 @@ module ChobbleForms
 
   module FieldUtils
     # Strip field suffixes like _pass and _comment
-    def self.strip_field_suffix: (Symbol | String field) -> String
+    def self.strip_field_suffix: (Symbol field) -> String
     
     # Get composite fields based on partial type
-    def self.get_composite_fields: (Symbol | String field, Symbol | String partial) -> Array[String]
+    def self.get_composite_fields: (Symbol field, Symbol partial) -> Array[String]
     
     # Check field types
-    def self.is_pass_field?: (Symbol | String field) -> bool
-    def self.is_comment_field?: (Symbol | String field) -> bool
-    def self.is_composite_field?: (Symbol | String field) -> bool
+    def self.is_pass_field?: (Symbol field) -> bool
+    def self.is_comment_field?: (Symbol field) -> bool
+    def self.is_composite_field?: (Symbol field) -> bool
     
     # Get base field name without suffixes
-    def self.base_field_name: (Symbol | String field) -> String
+    def self.base_field_name: (Symbol field) -> String
     
     # Get i18n label for form field
-    def self.form_field_label: (Symbol | String form, Symbol | String field) -> String
+    def self.form_field_label: (Symbol form, Symbol field) -> String
   end
 
   class Engine < Rails::Engine

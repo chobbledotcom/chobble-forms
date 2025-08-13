@@ -49,13 +49,18 @@ end
 if __FILE__ == $0
   example = TypedFormExample.new
 
-  # These calls are all type-safe
+  # All field parameters must be symbols - cleaner and more consistent!
   example.process_field(:inspection_date)
   example.process_field(:safety_check_pass)
   example.process_field(:notes_comment)
 
-  # This would cause a type error if uncommented:
-  # example.process_field("string_not_symbol") # Type error! Expected Symbol
+  # These would cause type errors at compile time:
+  # example.process_field("string_not_symbol") # ❌ Type error! Expected Symbol, got String
+  # example.get_field_label("my_field")        # ❌ Type error! Expected Symbol, got String
 
-  puts "\n✅ All type checks passed!"
+  # Always use symbols for field names:
+  label = example.get_field_label(:user_name)  # ✅ Correct
+  puts "Field label: #{label}"
+
+  puts "\n✅ All type checks passed! Symbols-only API enforced."
 end
