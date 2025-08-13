@@ -5,6 +5,6 @@ require "sorbet-runtime"
 
 module ChobbleForms
   extend T::Sig
-  
+
   VERSION = T.let("0.5.6", String)
 end

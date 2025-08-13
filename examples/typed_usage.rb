@@ -33,11 +33,11 @@ class TypedFormExample
   def process_field(field)
     base_name = ChobbleForms::FieldUtils.base_field_name(field)
     puts "Processing field: #{base_name}"
-    
+
     if is_special_field?(field)
       puts "  This is a special field (pass/comment)"
     end
-    
+
     related = get_related_fields(field, :pass_fail_comment)
     if related.any?
       puts "  Related fields: #{related.join(", ")}"
@@ -48,14 +48,14 @@ end
 # Usage example
 if __FILE__ == $0
   example = TypedFormExample.new
-  
+
   # These calls are all type-safe
   example.process_field(:inspection_date)
   example.process_field(:safety_check_pass)
   example.process_field(:notes_comment)
-  
+
   # This would cause a type error if uncommented:
   # example.process_field("string_not_symbol") # Type error! Expected Symbol
-  
+
   puts "\n✅ All type checks passed!"
 end
