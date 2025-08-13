@@ -1,0 +1,38 @@
+module ChobbleForms
+  VERSION: String
+
+  module Helpers
+    def form_field_setup: (Symbol field, Hash[Symbol, untyped] local_assigns) -> Hash[Symbol, untyped]
+        def get_field_value_and_prefilled_status: (untyped form_object, Symbol field) -> [untyped, bool]
+        def comment_field_options: (untyped form, Symbol comment_field, String base_field_label) -> Hash[Symbol, untyped]
+        def radio_button_options: (bool prefilled, untyped checked_value, untyped expected_value) -> Hash[Symbol, bool]
+    
+    private
+        def validate_local_assigns: (Hash[Symbol, untyped] local_assigns) -> void
+    def validate_form_context: () -> void
+        def build_field_translations: (Symbol field) -> Hash[Symbol, String?]
+    def build_field_setup_result: (Hash[Symbol, String?] field_translations, untyped value, bool prefilled) -> Hash[Symbol, untyped]
+        def resolve_field_value: (untyped model, Symbol field) -> Hash[Symbol, untyped]
+    def extract_previous_value: (untyped previous_inspection, untyped current_model, Symbol field) -> untyped
+    def format_numeric_value: (untyped value) -> untyped
+    def strip_trailing_zeros: (untyped value) -> String?
+    def resolve_association_value: (untyped model, String field_str) -> Hash[Symbol, untyped]
+  end
+
+  module FieldUtils
+    def self.strip_field_suffix: (Symbol field) -> String
+        def self.get_composite_fields: (Symbol field, Symbol partial) -> Array[String]
+        def self.is_pass_field?: (Symbol field) -> bool
+    def self.is_comment_field?: (Symbol field) -> bool
+    def self.is_composite_field?: (Symbol field) -> bool
+        def self.base_field_name: (Symbol field) -> String
+        def self.form_field_label: (Symbol form, Symbol field) -> String
+  end
+
+  class Engine < Rails::Engine
+    def self.isolate_namespace: (Module mod) -> void
+    def self.initializer: (String name, ?Hash[untyped, untyped] opts) { () -> void } -> void
+    def self.config: () -> untyped
+    def self.root: () -> Pathname
+  end
+end

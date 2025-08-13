@@ -7,7 +7,7 @@ module ChobbleForms
   module Helpers
     extend T::Sig
 
-    sig { params(field: T.any(Symbol, String), local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
+    sig { params(field: Symbol, local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
     def form_field_setup(field, local_assigns)
       validate_local_assigns(local_assigns)
       validate_form_context
@@ -19,7 +19,7 @@ module ChobbleForms
       build_field_setup_result(field_translations, value, prefilled)
     end
 
-    sig { params(form_object: T.untyped, field: T.any(Symbol, String)).returns([T.untyped, T::Boolean]) }
+    sig { params(form_object: T.untyped, field: Symbol).returns([T.untyped, T::Boolean]) }
     def get_field_value_and_prefilled_status(form_object, field)
       return [nil, false] unless form_object&.object
       model = form_object.object
@@ -27,7 +27,7 @@ module ChobbleForms
       [resolved[:value], resolved[:prefilled]]
     end
 
-    sig { params(form: T.untyped, comment_field: T.any(Symbol, String), base_field_label: String).returns(T::Hash[Symbol, T.untyped]) }
+    sig { params(form: T.untyped, comment_field: Symbol, base_field_label: String).returns(T::Hash[Symbol, T.untyped]) }
     def comment_field_options(form, comment_field, base_field_label)
       raise ArgumentError, "form_object required" unless form
       model = form.object
@@ -106,7 +106,7 @@ module ChobbleForms
       raise ArgumentError, "missing form_object" unless form_obj
     end
 
-    sig { params(field: T.any(Symbol, String)).returns(T::Hash[Symbol, T.nilable(String)]) }
+    sig { params(field: Symbol).returns(T::Hash[Symbol, T.nilable(String)]) }
     def build_field_translations(field)
       i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
       fields_key = "#{i18n_base}.fields.#{field}"
@@ -137,29 +137,24 @@ module ChobbleForms
       }.merge(field_translations)
     end
 
-    sig { params(model: T.untyped, field: T.any(Symbol, String)).returns(T::Hash[Symbol, T.untyped]) }
+    sig { params(model: T.untyped, field: Symbol).returns(T::Hash[Symbol, T.untyped]) }
     def resolve_field_value(model, field)
       field_str = field.to_s
 
-      # Never return values for password fields
       if field_str.include?("password")
         return {value: nil, prefilled: false}
       end
 
-      # Check current model value
       current_value = model.send(field) if model.respond_to?(field)
 
-      # Check if this field should be excluded from prefilling
       if defined?(InspectionsController::NOT_COPIED_FIELDS) &&
           InspectionsController::NOT_COPIED_FIELDS.include?(field_str)
         return {value: current_value, prefilled: false}
       end
 
-      # Extract previous value if available
       prev_inspection = T.unsafe(instance_variable_get(:@previous_inspection))
       previous_value = extract_previous_value(prev_inspection, model, field)
 
-      # Return previous value if current is nil and previous exists
       if current_value.nil? && !previous_value.nil?
         return {
           value: format_numeric_value(previous_value),
@@ -170,12 +165,11 @@ module ChobbleForms
       if field_str.end_with?("_id") && field_str != "id"
         resolve_association_value(model, field_str)
       else
-        # Always return current value, even if nil
         {value: current_value, prefilled: false}
       end
     end
 
-    sig { params(previous_inspection: T.untyped, current_model: T.untyped, field: T.any(Symbol, String)).returns(T.untyped) }
+    sig { params(previous_inspection: T.untyped, current_model: T.untyped, field: Symbol).returns(T.untyped) }
     def extract_previous_value(previous_inspection, current_model, field)
       if !previous_inspection
         nil
