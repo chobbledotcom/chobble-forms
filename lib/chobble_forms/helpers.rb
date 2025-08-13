@@ -141,25 +141,20 @@ module ChobbleForms
     def resolve_field_value(model, field)
       field_str = field.to_s
 
-      # Never return values for password fields
       if field_str.include?("password")
         return {value: nil, prefilled: false}
       end
 
-      # Check current model value
       current_value = model.send(field) if model.respond_to?(field)
 
-      # Check if this field should be excluded from prefilling
       if defined?(InspectionsController::NOT_COPIED_FIELDS) &&
           InspectionsController::NOT_COPIED_FIELDS.include?(field_str)
         return {value: current_value, prefilled: false}
       end
 
-      # Extract previous value if available
       prev_inspection = T.unsafe(instance_variable_get(:@previous_inspection))
       previous_value = extract_previous_value(prev_inspection, model, field)
 
-      # Return previous value if current is nil and previous exists
       if current_value.nil? && !previous_value.nil?
         return {
           value: format_numeric_value(previous_value),
@@ -170,7 +165,6 @@ module ChobbleForms
       if field_str.end_with?("_id") && field_str != "id"
         resolve_association_value(model, field_str)
       else
-        # Always return current value, even if nil
         {value: current_value, prefilled: false}
       end
     end

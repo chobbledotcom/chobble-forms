@@ -104,12 +104,10 @@ class Pathname
   def join(*args); end
 end
 
-# Add any constants that might be defined in the app
 module InspectionsController
   NOT_COPIED_FIELDS = T.let([], T::Array[String])
 end
 
-# Include the helpers in ChobbleForms::Helpers
 module ChobbleForms
   module Helpers
     include ActionView::Helpers::NumberHelper
