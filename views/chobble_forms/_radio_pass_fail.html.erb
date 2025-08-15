@@ -4,8 +4,7 @@
 
   # Check if this field is an enum by looking at the model
   model = form.object
-  base_field = field.to_s.gsub(/_pass$/, "")
-  is_enum = model.class.respond_to?(:defined_enums) && model.class.defined_enums.key?(base_field)
+  is_enum = model.class.respond_to?(:defined_enums) && model.class.defined_enums.key?(field.to_s)
 
   if is_enum
     pass_value = "pass"
