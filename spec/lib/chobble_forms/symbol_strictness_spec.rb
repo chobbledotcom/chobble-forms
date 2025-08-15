@@ -6,6 +6,7 @@ RSpec.describe "Symbol strictness enforcement", type: :view do
       include ActiveModel::Model
       attr_accessor :test_field
       def persisted? = false
+
       def self.name = "TestModel"
     end.new
   end

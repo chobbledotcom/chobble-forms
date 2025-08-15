@@ -93,7 +93,7 @@ module ChobbleForms
         unless field.is_a?(Symbol)
           raise ArgumentError, "Field names must be symbols, not #{field.class}. Got: #{field.inspect}"
         end
-        
+
         if field.to_s.match?(/^[A-Z]/)
           raise ArgumentError, "Field names must be snake_case symbols, not class names. Use :field, not Field."
         end
