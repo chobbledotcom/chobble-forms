@@ -48,11 +48,11 @@ RSpec.describe "Symbol strictness enforcement", type: :view do
         render partial: "chobble_forms/text_field", locals: {field: :TestField}
       }.to raise_error(ActionView::Template::Error, /Field names must be snake_case symbols/)
     end
-    
+
     it "validates field consistency between parameter and local_assigns" do
       # Direct test of the validation method
       helper = Object.new.extend(ChobbleForms::Helpers)
-      
+
       expect {
         helper.send(:validate_local_assigns, :test_field, {field: :different_field})
       }.to raise_error(ArgumentError, /Field parameter.*doesn't match/)
