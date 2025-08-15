@@ -4,3 +4,4 @@ log/
 spec/examples.txt
 .envrc
 .rspec_status
+.terragon-setup-complete
