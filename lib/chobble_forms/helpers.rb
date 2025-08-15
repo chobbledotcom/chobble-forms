@@ -22,6 +22,7 @@ module ChobbleForms
     sig { params(form_object: T.untyped, field: Symbol).returns([T.untyped, T::Boolean]) }
     def get_field_value_and_prefilled_status(form_object, field)
       return [nil, false] unless form_object&.object
+
       model = form_object.object
       resolved = resolve_field_value(model, field)
       [resolved[:value], resolved[:prefilled]]
@@ -30,6 +31,7 @@ module ChobbleForms
     sig { params(form: T.untyped, comment_field: Symbol, base_field_label: String).returns(T::Hash[Symbol, T.untyped]) }
     def comment_field_options(form, comment_field, base_field_label)
       raise ArgumentError, "form_object required" unless form
+
       model = form.object
 
       comment_value, comment_prefilled =
@@ -81,11 +83,11 @@ module ChobbleForms
       rows
       step
       type
-    ], T::Array[Symbol])
+    ].freeze, T::Array[Symbol])
 
     sig { params(local_assigns: T::Hash[Symbol, T.untyped]).void }
     def validate_local_assigns(local_assigns)
-      if local_assigns[:field]&.respond_to?(:to_s) &&
+      if local_assigns[:field].respond_to?(:to_s) &&
           local_assigns[:field].to_s.match?(/^[A-Z]/)
         raise ArgumentError, "Field names must be snake_case symbols, not class names. Use :field, not Field."
       end
@@ -93,9 +95,9 @@ module ChobbleForms
       locally_assigned_keys = local_assigns.keys
       disallowed_keys = locally_assigned_keys - ALLOWED_LOCAL_ASSIGNS
 
-      if disallowed_keys.any?
-        raise ArgumentError, "local_assigns contains #{disallowed_keys.inspect}"
-      end
+      return unless disallowed_keys.any?
+
+      raise ArgumentError, "local_assigns contains #{disallowed_keys.inspect}"
     end
 
     sig { void }
@@ -109,7 +111,9 @@ module ChobbleForms
     sig { params(field: Symbol).returns(T::Hash[Symbol, T.nilable(String)]) }
     def build_field_translations(field)
       i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
-      fields_key = "#{i18n_base}.fields.#{field}"
+
+      field_without_suffix = FieldUtils.strip_field_suffix(field)
+      fields_key = "#{i18n_base}.fields.#{field_without_suffix}"
       field_label = t(fields_key, raise: true)
 
       base_parts = i18n_base.split(".")
@@ -141,16 +145,13 @@ module ChobbleForms
     def resolve_field_value(model, field)
       field_str = field.to_s
 
-      if field_str.include?("password")
-        return {value: nil, prefilled: false}
-      end
+      return {value: nil, prefilled: false} if field_str.include?("password")
 
       current_value = model.send(field) if model.respond_to?(field)
 
-      if defined?(InspectionsController::NOT_COPIED_FIELDS) &&
-          InspectionsController::NOT_COPIED_FIELDS.include?(field_str)
-        return {value: current_value, prefilled: false}
-      end
+      # Check if this field should not be prefilled based on excluded fields list
+      excluded_fields = T.unsafe(instance_variable_get(:@_excluded_prefill_fields))
+      return {value: current_value, prefilled: false} if excluded_fields&.include?(field)
 
       prev_inspection = T.unsafe(instance_variable_get(:@previous_inspection))
       previous_value = extract_previous_value(prev_inspection, model, field)

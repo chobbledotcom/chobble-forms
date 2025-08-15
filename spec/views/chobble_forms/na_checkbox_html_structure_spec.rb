@@ -9,7 +9,7 @@ RSpec.describe "N/A Checkbox HTML Structure for JavaScript", type: :view do
 
       # Mock enum behavior for _pass fields to support N/A radio buttons
       def self.defined_enums
-        {"safety_check_pass" => {"fail" => 0, "pass" => 1, "na" => 2}}
+        {"safety_check" => {"fail" => 0, "pass" => 1, "na" => 2}}
       end
 
       def self.name
@@ -30,7 +30,7 @@ RSpec.describe "N/A Checkbox HTML Structure for JavaScript", type: :view do
       test: {
         forms: {
           fields: {
-            safety_check_pass: "Safety Check"
+            safety_check: "Safety Check"
           }
         }
       },

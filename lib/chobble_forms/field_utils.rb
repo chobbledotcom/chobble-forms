@@ -7,23 +7,23 @@ module ChobbleForms
   module FieldUtils
     extend T::Sig
 
-    sig { params(field: Symbol).returns(String) }
+    sig { params(field: Symbol).returns(Symbol) }
     def self.strip_field_suffix(field)
-      field.to_s.gsub(/_pass$|_comment$/, "")
+      field.to_s.gsub(/_pass$|_comment$/, "").to_sym
     end
 
-    sig { params(field: Symbol, partial: Symbol).returns(T::Array[String]) }
+    sig { params(field: Symbol, partial: Symbol).returns(T::Array[Symbol]) }
     def self.get_composite_fields(field, partial)
-      fields = T.let([], T::Array[String])
+      fields = T.let([], T::Array[Symbol])
       partial_str = partial.to_s
 
       if partial_str.include?("pass_fail") && !field.to_s.end_with?("_pass")
-        fields << "#{field}_pass"
+        fields << :"#{field}_pass"
       end
 
       if partial_str.include?("comment")
         base = field.to_s.end_with?("_pass") ? strip_field_suffix(field) : field
-        fields << "#{base}_comment"
+        fields << :"#{base}_comment"
       end
 
       fields
@@ -44,7 +44,7 @@ module ChobbleForms
       is_pass_field?(field) || is_comment_field?(field)
     end
 
-    sig { params(field: Symbol).returns(String) }
+    sig { params(field: Symbol).returns(Symbol) }
     def self.base_field_name(field)
       strip_field_suffix(field)
     end

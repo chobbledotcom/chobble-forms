@@ -8,6 +8,7 @@
   #   url: Form submission URL (defaults to model's update path)
   #   method: HTTP method (defaults to :patch for models, :post for scoped forms)
   #   local: Use standard form submission instead of Turbo (defaults to false)
+  #   excluded_prefill_fields: Array of field symbols that should not be prefilled
 
   if model
     url ||= url_for(model)
@@ -51,6 +52,11 @@ end %>
 
   <% @_current_form = form %>
   <% @_current_i18n_base = i18n_base %>
+
+  <% # Set excluded prefill fields if provided %>
+  <% if local_assigns[:excluded_prefill_fields] %>
+    <% @_excluded_prefill_fields = excluded_prefill_fields %>
+  <% end %>
 
   <%= yield form %>
 

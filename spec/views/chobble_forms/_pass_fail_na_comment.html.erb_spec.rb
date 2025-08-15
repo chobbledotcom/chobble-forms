@@ -11,10 +11,10 @@ class PassFailNaCommentTestModel
   # Mock enum behavior for _pass fields to support N/A radio buttons
   def self.defined_enums
     {
-      "ropes_pass" => {"fail" => 0, "pass" => 1, "na" => 2},
-      "seam_integrity_pass" => {"fail" => 0, "pass" => 1, "na" => 2},
-      "material_check_pass" => {"fail" => 0, "pass" => 1, "na" => 2},
-      "safety_pass" => {"fail" => 0, "pass" => 1, "na" => 2}
+      "ropes" => {"fail" => 0, "pass" => 1, "na" => 2},
+      "seam_integrity" => {"fail" => 0, "pass" => 1, "na" => 2},
+      "material_check" => {"fail" => 0, "pass" => 1, "na" => 2},
+      "safety" => {"fail" => 0, "pass" => 1, "na" => 2}
     }
   end
 end
@@ -41,10 +41,10 @@ RSpec.describe "chobble_forms/_pass_fail_na_comment.html.erb", type: :view do
       test: {
         forms: {
           fields: {
-            ropes_pass: "Ropes",
-            seam_integrity_pass: "Seam Integrity",
-            material_check_pass: "Material Check",
-            safety_pass: "Safety Check"
+            ropes: "Ropes",
+            seam_integrity: "Seam Integrity",
+            material_check: "Material Check",
+            safety: "Safety Check"
           }
         }
       },
