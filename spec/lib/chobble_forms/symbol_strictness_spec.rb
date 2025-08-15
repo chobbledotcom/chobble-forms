@@ -36,7 +36,8 @@ RSpec.describe "Symbol strictness enforcement", type: :view do
       }.not_to raise_error
     end
 
-    it "rejects string field names" do
+    it "rejects string field names via Sorbet type checking" do
+      # Sorbet's strict typing catches string fields at the parameter level
       expect {
         render partial: "chobble_forms/text_field", locals: {field: "test_field"}
       }.to raise_error(ActionView::Template::Error, /Expected type Symbol, got type String/)
@@ -46,6 +47,15 @@ RSpec.describe "Symbol strictness enforcement", type: :view do
       expect {
         render partial: "chobble_forms/text_field", locals: {field: :TestField}
       }.to raise_error(ActionView::Template::Error, /Field names must be snake_case symbols/)
+    end
+    
+    it "validates field consistency between parameter and local_assigns" do
+      # Direct test of the validation method
+      helper = Object.new.extend(ChobbleForms::Helpers)
+      
+      expect {
+        helper.send(:validate_local_assigns, :test_field, {field: :different_field})
+      }.to raise_error(ArgumentError, /Field parameter.*doesn't match/)
     end
   end
 
