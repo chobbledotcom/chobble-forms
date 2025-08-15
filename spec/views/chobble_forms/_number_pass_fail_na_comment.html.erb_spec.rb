@@ -13,9 +13,9 @@ class NumberPassFailNaCommentTestModel
   # Mock enum behavior for _pass fields to support N/A radio buttons
   def self.defined_enums
     {
-      "slide_platform_height" => {"fail" => 0, "pass" => 1, "na" => 2},
-      "beam_width" => {"fail" => 0, "pass" => 1, "na" => 2},
-      "anchor_spacing" => {"fail" => 0, "pass" => 1, "na" => 2}
+      "slide_platform_height_pass" => {"fail" => 0, "pass" => 1, "na" => 2},
+      "beam_width_pass" => {"fail" => 0, "pass" => 1, "na" => 2},
+      "anchor_spacing_pass" => {"fail" => 0, "pass" => 1, "na" => 2}
     }
   end
 end
