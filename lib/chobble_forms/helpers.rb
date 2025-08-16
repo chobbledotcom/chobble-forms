@@ -7,7 +7,35 @@ module ChobbleForms
   module Helpers
     extend T::Sig
 
-    sig { params(field: Symbol, local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
+    SelectOption = T.type_alias {
+      [String, T.any(String, Integer)]
+    }
+
+    LocalAssignValue = T.type_alias {
+      T.any(
+        String,
+        Symbol,
+        Integer,
+        Float,
+        T::Boolean,
+        T::Array[SelectOption],
+        T::Hash[Symbol, T.untyped]
+      )
+    }
+
+    FieldSetupResult = T.type_alias {
+      {
+        form_object: T.untyped,
+        i18n_base: String,
+        value: T.untyped,
+        prefilled: T::Boolean,
+        field_label: String,
+        field_hint: T.nilable(String),
+        field_placeholder: T.nilable(String)
+      }
+    }
+
+    sig { params(field: Symbol, local_assigns: T::Hash[Symbol, LocalAssignValue]).returns(FieldSetupResult) }
     def form_field_setup(field, local_assigns)
       validate_local_assigns(local_assigns)
       validate_form_context
@@ -85,13 +113,8 @@ module ChobbleForms
       type
     ].freeze, T::Array[Symbol])
 
-    sig { params(local_assigns: T::Hash[Symbol, T.untyped]).void }
+    sig { params(local_assigns: T::Hash[Symbol, LocalAssignValue]).void }
     def validate_local_assigns(local_assigns)
-      if local_assigns[:field].respond_to?(:to_s) &&
-          local_assigns[:field].to_s.match?(/^[A-Z]/)
-        raise ArgumentError, "Field names must be snake_case symbols, not class names. Use :field, not Field."
-      end
-
       locally_assigned_keys = local_assigns.keys
       disallowed_keys = locally_assigned_keys - ALLOWED_LOCAL_ASSIGNS
 
@@ -128,20 +151,23 @@ module ChobbleForms
       }
     end
 
-    sig { params(field_translations: T::Hash[Symbol, T.nilable(String)], value: T.untyped, prefilled: T::Boolean).returns(T::Hash[Symbol, T.untyped]) }
+    sig { params(field_translations: T::Hash[Symbol, T.nilable(String)], value: T.untyped, prefilled: T::Boolean).returns(FieldSetupResult) }
     def build_field_setup_result(field_translations, value, prefilled)
       form_obj = T.unsafe(instance_variable_get(:@_current_form))
       i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
 
-      {
-        form_object: form_obj,
-        i18n_base: i18n_base,
-        value:,
-        prefilled:
-      }.merge(field_translations)
+      T.cast(
+        {
+          form_object: form_obj,
+          i18n_base: i18n_base,
+          value:,
+          prefilled:
+        }.merge(field_translations),
+        FieldSetupResult
+      )
     end
 
-    sig { params(model: T.untyped, field: Symbol).returns(T::Hash[Symbol, T.untyped]) }
+    sig { params(model: T.untyped, field: Symbol).returns({value: T.untyped, prefilled: T::Boolean}) }
     def resolve_field_value(model, field)
       field_str = field.to_s
 

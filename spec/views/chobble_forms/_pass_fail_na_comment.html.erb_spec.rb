@@ -11,10 +11,10 @@ class PassFailNaCommentTestModel
   # Mock enum behavior for _pass fields to support N/A radio buttons
   def self.defined_enums
     {
-      "ropes" => {"fail" => 0, "pass" => 1, "na" => 2},
-      "seam_integrity" => {"fail" => 0, "pass" => 1, "na" => 2},
-      "material_check" => {"fail" => 0, "pass" => 1, "na" => 2},
-      "safety" => {"fail" => 0, "pass" => 1, "na" => 2}
+      "ropes_pass" => {"fail" => 0, "pass" => 1, "na" => 2},
+      "seam_integrity_pass" => {"fail" => 0, "pass" => 1, "na" => 2},
+      "material_check_pass" => {"fail" => 0, "pass" => 1, "na" => 2},
+      "safety_pass" => {"fail" => 0, "pass" => 1, "na" => 2}
     }
   end
 end
