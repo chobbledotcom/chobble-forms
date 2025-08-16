@@ -7,7 +7,30 @@ module ChobbleForms
   module Helpers
     extend T::Sig
 
-    sig { params(field: Symbol, local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
+    # Define possible value types for local_assigns
+    # Based on analysis of all view partials, local_assigns values can be:
+    # - String: for accept, placeholder, help_text, etc.
+    # - Symbol: for field names and type specifications
+    # - Integer: for rows, preview_size
+    # - Float/Integer: for min, max, step
+    # - Boolean: for required, add_not_applicable
+    # - Array: for options in selects
+    # - Hash: for complex options like number_options
+    LocalAssignValue = T.type_alias {
+      T.nilable(
+        T.any(
+          String,
+          Symbol,
+          Integer,
+          Float,
+          T::Boolean,
+          T::Array[T.untyped],
+          T::Hash[Symbol, T.untyped]
+        )
+      )
+    }
+
+    sig { params(field: Symbol, local_assigns: T::Hash[Symbol, LocalAssignValue]).returns(T::Hash[Symbol, T.untyped]) }
     def form_field_setup(field, local_assigns)
       # The field parameter is already strictly typed as Symbol in the signature
       validate_local_assigns(local_assigns)
@@ -86,7 +109,7 @@ module ChobbleForms
       type
     ].freeze, T::Array[Symbol])
 
-    sig { params(local_assigns: T::Hash[Symbol, T.untyped]).void }
+    sig { params(local_assigns: T::Hash[Symbol, LocalAssignValue]).void }
     def validate_local_assigns(local_assigns)
       locally_assigned_keys = local_assigns.keys
       disallowed_keys = locally_assigned_keys - ALLOWED_LOCAL_ASSIGNS
