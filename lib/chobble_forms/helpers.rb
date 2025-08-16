@@ -29,7 +29,28 @@ module ChobbleForms
       )
     }
 
-    sig { params(field: Symbol, local_assigns: T::Hash[Symbol, LocalAssignValue]).returns(T::Hash[Symbol, T.untyped]) }
+    # Define the return type for form_field_setup
+    # Returns a hash containing form setup information:
+    # - form_object: The Rails form builder object
+    # - i18n_base: The base path for i18n translations
+    # - value: The current field value (may be prefilled)
+    # - prefilled: Whether the value was prefilled from previous data
+    # - field_label: The translated label for the field
+    # - field_hint: Optional hint text (may be nil)
+    # - field_placeholder: Optional placeholder text (may be nil)
+    FieldSetupResult = T.type_alias {
+      {
+        form_object: T.untyped,  # Rails form builder, complex type
+        i18n_base: String,
+        value: T.untyped,  # Can be any field value type
+        prefilled: T::Boolean,
+        field_label: String,
+        field_hint: T.nilable(String),
+        field_placeholder: T.nilable(String)
+      }
+    }
+
+    sig { params(field: Symbol, local_assigns: T::Hash[Symbol, LocalAssignValue]).returns(FieldSetupResult) }
     def form_field_setup(field, local_assigns)
       # The field parameter is already strictly typed as Symbol in the signature
       validate_local_assigns(local_assigns)
@@ -146,17 +167,20 @@ module ChobbleForms
       }
     end
 
-    sig { params(field_translations: T::Hash[Symbol, T.nilable(String)], value: T.untyped, prefilled: T::Boolean).returns(T::Hash[Symbol, T.untyped]) }
+    sig { params(field_translations: T::Hash[Symbol, T.nilable(String)], value: T.untyped, prefilled: T::Boolean).returns(FieldSetupResult) }
     def build_field_setup_result(field_translations, value, prefilled)
       form_obj = T.unsafe(instance_variable_get(:@_current_form))
       i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
 
-      {
-        form_object: form_obj,
-        i18n_base: i18n_base,
-        value:,
-        prefilled:
-      }.merge(field_translations)
+      T.cast(
+        {
+          form_object: form_obj,
+          i18n_base: i18n_base,
+          value:,
+          prefilled:
+        }.merge(field_translations),
+        FieldSetupResult
+      )
     end
 
     sig { params(model: T.untyped, field: Symbol).returns(T::Hash[Symbol, T.untyped]) }
