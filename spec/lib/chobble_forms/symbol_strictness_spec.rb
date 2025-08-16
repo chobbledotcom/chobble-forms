@@ -4,10 +4,16 @@ RSpec.describe "Symbol strictness enforcement", type: :view do
   let(:test_model) do
     Class.new do
       include ActiveModel::Model
-      attr_accessor :test_field
+      attr_accessor :test_field, :TestField
+      
       def persisted? = false
-
+      
       def self.name = "TestModel"
+      
+      # Mimic ActiveRecord's attributes method for error messages
+      def attributes
+        {"test_field" => test_field, "TestField" => TestField}
+      end
     end.new
   end
 

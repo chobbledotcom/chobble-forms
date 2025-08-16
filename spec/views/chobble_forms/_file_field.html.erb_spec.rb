@@ -1,8 +1,26 @@
 require "rails_helper"
 
+# Test model that mimics ActiveRecord behavior with file attachments
+class FileFieldTestModel
+  include ActiveModel::Model
+  attr_accessor :photo, :photo_pass
+  
+  def persisted?
+    @persisted ||= false
+  end
+  
+  def persisted=(value)
+    @persisted = value
+  end
+  
+  def attributes
+    {"photo" => photo, "photo_pass" => photo_pass}
+  end
+end
+
 RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
   let(:form_builder) { double("form_builder") }
-  let(:mock_object) { double("model") }
+  let(:mock_object) { FileFieldTestModel.new }
   let(:field) { :photo }
   let(:i18n_base) { "units.forms" }
 
@@ -24,8 +42,7 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
     before do
       attachment = double("attachment")
       allow(attachment).to receive(:attached?).and_return(false)
-      allow(mock_object).to receive(:respond_to?).with(:photo).and_return(true)
-      allow(mock_object).to receive(:photo).and_return(attachment)
+      mock_object.photo = attachment
     end
 
     it "renders the file field without preview" do
@@ -52,9 +69,8 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
       allow(attachment).to receive(:blob).and_return(blob)
       allow(attachment).to receive(:filename).and_return("test.jpg")
       allow(attachment).to receive(:image?).and_return(true)
-      allow(mock_object).to receive(:respond_to?).with(:photo).and_return(true)
-      allow(mock_object).to receive(:photo).and_return(attachment)
-      allow(mock_object).to receive(:persisted?).and_return(false)
+      mock_object.photo = attachment
+      mock_object.persisted = false
     end
 
     it "does not render preview for new records" do
@@ -83,9 +99,8 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
       allow(blob).to receive(:service).and_return(service)
       allow(blob).to receive(:key).and_return("test_key")
       allow(service).to receive(:exist?).and_return(true)
-      allow(mock_object).to receive(:respond_to?).with(:photo).and_return(true)
-      allow(mock_object).to receive(:photo).and_return(attachment)
-      allow(mock_object).to receive(:persisted?).and_return(true)
+      mock_object.photo = attachment
+      mock_object.persisted = true
     end
 
     context "with image file and preview enabled" do
@@ -131,16 +146,25 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
   end
 
   context "when model does not respond to field" do
-    before do
-      allow(mock_object).to receive(:respond_to?).with(:photo).and_return(false)
+    let(:mock_object) do
+      # Create a model without the photo field
+      Class.new do
+        include ActiveModel::Model
+        
+        def persisted?
+          false
+        end
+        
+        def attributes
+          {}
+        end
+      end.new
     end
 
-    it "renders without errors or preview" do
-      render "chobble_forms/file_field", field: field
-
-      expect(rendered).to have_text("Photo")
-      expect(rendered).to have_selector('input[type="file"][name="photo"]')
-      expect(rendered).not_to have_selector(".file-preview")
+    it "raises an error when field doesn't exist" do
+      expect {
+        render "chobble_forms/file_field", field: field
+      }.to raise_error(ActionView::Template::Error, /Field 'photo' or 'photo_pass' not found/)
     end
   end
 
@@ -155,8 +179,7 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
 
       attachment = double("attachment")
       allow(attachment).to receive(:attached?).and_return(false)
-      allow(mock_object).to receive(:respond_to?).with(:photo).and_return(true)
-      allow(mock_object).to receive(:photo).and_return(attachment)
+      mock_object.photo = attachment
     end
 
     it "displays the hint text" do

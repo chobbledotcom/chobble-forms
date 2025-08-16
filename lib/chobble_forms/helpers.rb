@@ -135,8 +135,9 @@ module ChobbleForms
     def build_field_translations(field)
       i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
 
-      field_without_suffix = FieldUtils.strip_field_suffix(field)
-      fields_key = "#{i18n_base}.fields.#{field_without_suffix}"
+      # Only strip _pass suffix for pass/fail fields, not _comment fields
+      lookup_field = field.to_s.end_with?("_pass") ? FieldUtils.strip_field_suffix(field) : field
+      fields_key = "#{i18n_base}.fields.#{lookup_field}"
       field_label = t(fields_key, raise: true)
 
       base_parts = i18n_base.split(".")
@@ -173,7 +174,15 @@ module ChobbleForms
 
       return {value: nil, prefilled: false} if field_str.include?("password")
 
-      current_value = model.send(field) if model.respond_to?(field)
+      # For composite partials, we receive the base field but need to check for suffixed fields
+      # Check for _pass field first (in case both base and _pass exist)
+      if model.respond_to?("#{field}_pass")
+        current_value = model.send("#{field}_pass")
+      elsif model.respond_to?(field)
+        current_value = model.send(field)
+      else
+        raise "Field '#{field}' or '#{field}_pass' not found on #{model.class.name}. Available fields: #{model.attributes.keys.sort.join(', ')}"
+      end
 
       # Check if this field should not be prefilled based on excluded fields list
       excluded_fields = T.unsafe(instance_variable_get(:@_excluded_prefill_fields))
