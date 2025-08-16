@@ -54,14 +54,6 @@ RSpec.describe "Symbol strictness enforcement", type: :view do
       }.not_to raise_error
     end
 
-    it "validates field consistency between parameter and local_assigns" do
-      # Direct test of the validation method
-      helper = Object.new.extend(ChobbleForms::Helpers)
-
-      expect {
-        helper.send(:validate_local_assigns, :test_field, {field: :different_field})
-      }.to raise_error(ArgumentError, /Field parameter.*doesn't match/)
-    end
   end
 
   describe "FieldUtils symbol enforcement" do

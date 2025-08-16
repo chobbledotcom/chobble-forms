@@ -10,8 +10,7 @@ module ChobbleForms
     sig { params(field: Symbol, local_assigns: T::Hash[Symbol, T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
     def form_field_setup(field, local_assigns)
       # The field parameter is already strictly typed as Symbol in the signature
-      # Pass it separately to validate_local_assigns for snake_case check
-      validate_local_assigns(field, local_assigns)
+      validate_local_assigns(local_assigns)
       validate_form_context
 
       field_translations = build_field_translations(field)
@@ -87,13 +86,8 @@ module ChobbleForms
       type
     ].freeze, T::Array[Symbol])
 
-    sig { params(field: Symbol, local_assigns: T::Hash[Symbol, T.untyped]).void }
-    def validate_local_assigns(field, local_assigns)
-      # Validate that field is passed in local_assigns and matches
-      if local_assigns[:field] && local_assigns[:field] != field
-        raise ArgumentError, "Field parameter (#{field}) doesn't match local_assigns[:field] (#{local_assigns[:field]})"
-      end
-
+    sig { params(local_assigns: T::Hash[Symbol, T.untyped]).void }
+    def validate_local_assigns(local_assigns)
       locally_assigned_keys = local_assigns.keys
       disallowed_keys = locally_assigned_keys - ALLOWED_LOCAL_ASSIGNS
 
