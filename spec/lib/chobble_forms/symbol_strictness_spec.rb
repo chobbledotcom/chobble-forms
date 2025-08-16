@@ -46,14 +46,13 @@ RSpec.describe "Symbol strictness enforcement", type: :view do
     it "accepts any symbol field names including CamelCase" do
       # Since we only care about Symbol type, not naming convention
       I18n.backend.store_translations(:en, {
-        test: { forms: { fields: { TestField: "Test Field" } } }
+        test: {forms: {fields: {TestField: "Test Field"}}}
       })
-      
+
       expect {
         render partial: "chobble_forms/text_field", locals: {field: :TestField}
       }.not_to raise_error
     end
-
   end
 
   describe "FieldUtils symbol enforcement" do
