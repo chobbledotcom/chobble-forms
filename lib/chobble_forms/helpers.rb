@@ -89,12 +89,7 @@ module ChobbleForms
 
     sig { params(field: Symbol, local_assigns: T::Hash[Symbol, T.untyped]).void }
     def validate_local_assigns(field, local_assigns)
-      # Since field is strictly typed as Symbol, we only need to validate snake_case
-      if field.to_s.match?(/^[A-Z]/)
-        raise ArgumentError, "Field names must be snake_case symbols, not class names. Use :field, not Field."
-      end
-
-      # Also validate that field is passed in local_assigns and matches
+      # Validate that field is passed in local_assigns and matches
       if local_assigns[:field] && local_assigns[:field] != field
         raise ArgumentError, "Field parameter (#{field}) doesn't match local_assigns[:field] (#{local_assigns[:field]})"
       end

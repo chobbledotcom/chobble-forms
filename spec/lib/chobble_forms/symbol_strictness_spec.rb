@@ -43,10 +43,15 @@ RSpec.describe "Symbol strictness enforcement", type: :view do
       }.to raise_error(ActionView::Template::Error, /Expected type Symbol, got type String/)
     end
 
-    it "rejects non-snake_case symbol field names" do
+    it "accepts any symbol field names including CamelCase" do
+      # Since we only care about Symbol type, not naming convention
+      I18n.backend.store_translations(:en, {
+        test: { forms: { fields: { TestField: "Test Field" } } }
+      })
+      
       expect {
         render partial: "chobble_forms/text_field", locals: {field: :TestField}
-      }.to raise_error(ActionView::Template::Error, /Field names must be snake_case symbols/)
+      }.not_to raise_error
     end
 
     it "validates field consistency between parameter and local_assigns" do
