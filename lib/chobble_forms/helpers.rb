@@ -7,16 +7,10 @@ module ChobbleForms
   module Helpers
     extend T::Sig
 
-    # Define possible value types for local_assigns
-    # Based on analysis of all view partials, local_assigns values can be:
-    # - String: for accept, placeholder, help_text, etc.
-    # - Symbol: for field names and type specifications
-    # - Integer: for rows, preview_size
-    # - Float/Integer: for min, max, step
-    # - Boolean: for required, add_not_applicable
-    # - Array: for options in selects
-    # - Hash: for complex options like number_options
-    # Values are never nil - keys are either present with values or absent
+    SelectOption = T.type_alias {
+      [String, T.any(String, Integer)]
+    }
+
     LocalAssignValue = T.type_alias {
       T.any(
         String,
@@ -24,25 +18,16 @@ module ChobbleForms
         Integer,
         Float,
         T::Boolean,
-        T::Array[T.untyped],
+        T::Array[SelectOption],
         T::Hash[Symbol, T.untyped]
       )
     }
 
-    # Define the return type for form_field_setup
-    # Returns a hash containing form setup information:
-    # - form_object: The Rails form builder object
-    # - i18n_base: The base path for i18n translations
-    # - value: The current field value (may be prefilled)
-    # - prefilled: Whether the value was prefilled from previous data
-    # - field_label: The translated label for the field
-    # - field_hint: Optional hint text (may be nil)
-    # - field_placeholder: Optional placeholder text (may be nil)
     FieldSetupResult = T.type_alias {
       {
-        form_object: T.untyped,  # Rails form builder, complex type
+        form_object: T.untyped,
         i18n_base: String,
-        value: T.untyped,  # Can be any field value type
+        value: T.untyped,
         prefilled: T::Boolean,
         field_label: String,
         field_hint: T.nilable(String),
@@ -52,7 +37,6 @@ module ChobbleForms
 
     sig { params(field: Symbol, local_assigns: T::Hash[Symbol, LocalAssignValue]).returns(FieldSetupResult) }
     def form_field_setup(field, local_assigns)
-      # The field parameter is already strictly typed as Symbol in the signature
       validate_local_assigns(local_assigns)
       validate_form_context
 
@@ -183,7 +167,7 @@ module ChobbleForms
       )
     end
 
-    sig { params(model: T.untyped, field: Symbol).returns(T::Hash[Symbol, T.untyped]) }
+    sig { params(model: T.untyped, field: Symbol).returns({value: T.untyped, prefilled: T::Boolean}) }
     def resolve_field_value(model, field)
       field_str = field.to_s
 
