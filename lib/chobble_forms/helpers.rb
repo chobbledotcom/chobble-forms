@@ -16,17 +16,16 @@ module ChobbleForms
     # - Boolean: for required, add_not_applicable
     # - Array: for options in selects
     # - Hash: for complex options like number_options
+    # Values are never nil - keys are either present with values or absent
     LocalAssignValue = T.type_alias {
-      T.nilable(
-        T.any(
-          String,
-          Symbol,
-          Integer,
-          Float,
-          T::Boolean,
-          T::Array[T.untyped],
-          T::Hash[Symbol, T.untyped]
-        )
+      T.any(
+        String,
+        Symbol,
+        Integer,
+        Float,
+        T::Boolean,
+        T::Array[T.untyped],
+        T::Hash[Symbol, T.untyped]
       )
     }
 
