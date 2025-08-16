@@ -181,7 +181,7 @@ module ChobbleForms
       elsif model.respond_to?(field)
         current_value = model.send(field)
       else
-        raise "Field '#{field}' or '#{field}_pass' not found on #{model.class.name}. Available fields: #{model.attributes.keys.sort.join(', ')}"
+        raise "Field '#{field}' or '#{field}_pass' not found on #{model.class.name}. Available fields: #{model.attributes.keys.sort.join(", ")}"
       end
 
       # Check if this field should not be prefilled based on excluded fields list

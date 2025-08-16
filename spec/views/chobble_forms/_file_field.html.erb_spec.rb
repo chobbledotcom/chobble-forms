@@ -4,15 +4,13 @@ require "rails_helper"
 class FileFieldTestModel
   include ActiveModel::Model
   attr_accessor :photo, :photo_pass
-  
+
   def persisted?
     @persisted ||= false
   end
-  
-  def persisted=(value)
-    @persisted = value
-  end
-  
+
+  attr_writer :persisted
+
   def attributes
     {"photo" => photo, "photo_pass" => photo_pass}
   end
@@ -150,11 +148,11 @@ RSpec.describe "chobble_forms/_file_field.html.erb", type: :view do
       # Create a model without the photo field
       Class.new do
         include ActiveModel::Model
-        
+
         def persisted?
           false
         end
-        
+
         def attributes
           {}
         end
