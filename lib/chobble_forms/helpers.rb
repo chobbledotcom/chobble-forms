@@ -7,11 +7,11 @@ module ChobbleForms
   module Helpers
     extend T::Sig
 
-    SelectOption = T.type_alias {
+    SelectOption = T.type_alias do
       [String, T.any(String, Integer)]
-    }
+    end
 
-    LocalAssignValue = T.type_alias {
+    LocalAssignValue = T.type_alias do
       T.any(
         String,
         Symbol,
@@ -21,9 +21,9 @@ module ChobbleForms
         T::Array[SelectOption],
         T::Hash[Symbol, T.untyped]
       )
-    }
+    end
 
-    FieldSetupResult = T.type_alias {
+    FieldSetupResult = T.type_alias do
       {
         form_object: T.untyped,
         i18n_base: String,
@@ -33,7 +33,7 @@ module ChobbleForms
         field_hint: T.nilable(String),
         field_placeholder: T.nilable(String)
       }
-    }
+    end
 
     sig { params(field: Symbol, local_assigns: T::Hash[Symbol, LocalAssignValue]).returns(FieldSetupResult) }
     def form_field_setup(field, local_assigns)
@@ -91,7 +91,10 @@ module ChobbleForms
       }
     end
 
-    sig { params(prefilled: T::Boolean, checked_value: T.untyped, expected_value: T.untyped).returns(T::Hash[Symbol, T::Boolean]) }
+    sig do
+      params(prefilled: T::Boolean, checked_value: T.untyped,
+        expected_value: T.untyped).returns(T::Hash[Symbol, T::Boolean])
+    end
     def radio_button_options(prefilled, checked_value, expected_value)
       (prefilled && checked_value == expected_value) ? {checked: true} : {}
     end
@@ -136,7 +139,11 @@ module ChobbleForms
       i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
 
       # Only strip _pass suffix for pass/fail fields, not _comment fields
-      lookup_field = field.to_s.end_with?("_pass") ? FieldUtils.strip_field_suffix(field) : field
+      lookup_field = if field.to_s.end_with?("_pass")
+        FieldUtils.strip_field_suffix(field)
+      else
+        field
+      end
       fields_key = "#{i18n_base}.fields.#{lookup_field}"
       field_label = t(fields_key, raise: true)
 
@@ -152,7 +159,10 @@ module ChobbleForms
       }
     end
 
-    sig { params(field_translations: T::Hash[Symbol, T.nilable(String)], value: T.untyped, prefilled: T::Boolean).returns(FieldSetupResult) }
+    sig do
+      params(field_translations: T::Hash[Symbol, T.nilable(String)], value: T.untyped,
+        prefilled: T::Boolean).returns(FieldSetupResult)
+    end
     def build_field_setup_result(field_translations, value, prefilled)
       form_obj = T.unsafe(instance_variable_get(:@_current_form))
       i18n_base = T.unsafe(instance_variable_get(:@_current_i18n_base))
@@ -168,21 +178,28 @@ module ChobbleForms
       )
     end
 
+    sig { params(model: T.untyped, field: Symbol, raise_if_missing: T::Boolean).returns(T.untyped) }
+    def get_field_value_from_model(model, field, raise_if_missing: false)
+      return nil unless model
+
+      # Check for base field first (for fields like step_ramp_size that have a base value)
+      # Only check for _pass suffix if base field doesn't exist (for pass_fail_comment partials)
+      if model.respond_to?(field)
+        model.send(field)
+      elsif model.respond_to?("#{field}_pass")
+        model.send("#{field}_pass")
+      elsif raise_if_missing
+        available = model.attributes.keys.sort.join(", ")
+        raise "Field '#{field}' or '#{field}_pass' not found on " \
+              "#{model.class.name}. Available fields: #{available}"
+      end
+    end
+
     sig { params(model: T.untyped, field: Symbol).returns({value: T.untyped, prefilled: T::Boolean}) }
     def resolve_field_value(model, field)
-      field_str = field.to_s
+      return {value: nil, prefilled: false} if field.to_s.include?("password")
 
-      return {value: nil, prefilled: false} if field_str.include?("password")
-
-      # For composite partials, we receive the base field but need to check for suffixed fields
-      # Check for _pass field first (in case both base and _pass exist)
-      if model.respond_to?("#{field}_pass")
-        current_value = model.send("#{field}_pass")
-      elsif model.respond_to?(field)
-        current_value = model.send(field)
-      else
-        raise "Field '#{field}' or '#{field}_pass' not found on #{model.class.name}. Available fields: #{model.attributes.keys.sort.join(", ")}"
-      end
+      current_value = get_field_value_from_model(model, field, raise_if_missing: true)
 
       # Check if this field should not be prefilled based on excluded fields list
       excluded_fields = T.unsafe(instance_variable_get(:@_excluded_prefill_fields))
@@ -198,11 +215,7 @@ module ChobbleForms
         }
       end
 
-      if field_str.end_with?("_id") && field_str != "id"
-        resolve_association_value(model, field_str)
-      else
-        {value: current_value, prefilled: false}
-      end
+      {value: current_value, prefilled: false}
     end
 
     sig { params(previous_inspection: T.untyped, current_model: T.untyped, field: Symbol).returns(T.untyped) }
@@ -212,7 +225,7 @@ module ChobbleForms
       elsif current_model.class.name.include?("Assessment")
         assessment_type = current_model.class.name.demodulize.underscore
         previous_model = previous_inspection.send(assessment_type)
-        previous_model&.send(field)
+        get_field_value_from_model(previous_model, field, raise_if_missing: false)
       else
         previous_inspection.send(field)
       end
