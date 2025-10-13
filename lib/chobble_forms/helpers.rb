@@ -127,6 +127,7 @@ module ChobbleForms
       rows
       step
       type
+      value
     ].freeze, T::Array[Symbol])
 
     sig { params(local_assigns: T::Hash[Symbol, LocalAssignValue]).void }

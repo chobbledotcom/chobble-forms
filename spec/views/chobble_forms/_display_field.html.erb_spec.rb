@@ -56,7 +56,8 @@ RSpec.describe "chobble_forms/_display_field.html.erb", type: :view do
   it "formats DateTime values nicely" do
     datetime = DateTime.new(2025, 10, 12, 16, 12, 0)
     test_model_with_datetime = DisplayFieldTestModel.new(created_at: datetime)
-    form_object_datetime = ActionView::Helpers::FormBuilder.new(:display_field_test_model, test_model_with_datetime, view, {})
+    form_object_datetime = ActionView::Helpers::FormBuilder.new(:display_field_test_model, test_model_with_datetime,
+      view, {})
     view.instance_variable_set(:@_current_form, form_object_datetime)
 
     I18n.backend.store_translations(:en, {
@@ -120,5 +121,23 @@ RSpec.describe "chobble_forms/_display_field.html.erb", type: :view do
 
     expect(rendered).to have_selector("label", text: "Date of Birth")
     expect(rendered).to have_selector("p", text: "October 12, 2025")
+  end
+
+  it "uses provided value parameter instead of model value" do
+    render "chobble_forms/display_field",
+      field: :name,
+      value: "Custom Value"
+
+    expect(rendered).to have_selector("label", text: "Name")
+    expect(rendered).to have_selector("p", text: "Custom Value")
+  end
+
+  it "renders value parameter with interpolation" do
+    render "chobble_forms/display_field",
+      field: :status,
+      value: "Active - #{Time.now.year}"
+
+    expect(rendered).to have_selector("label", text: "Status")
+    expect(rendered).to have_selector("p", text: /Active - \d{4}/)
   end
 end

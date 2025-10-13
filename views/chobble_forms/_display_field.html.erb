@@ -2,17 +2,21 @@
   # Get i18n_base from section (already validated there)
   setup = form_field_setup(field, local_assigns)
 
-  # Get value from model object automatically
-  model_object = setup[:form_object].object
-  value = model_object.send(field) if model_object.respond_to?(field)
+  # Use provided value parameter if present, otherwise get from model
+  if local_assigns.key?(:value)
+    display_value = value
+  else
+    model_object = setup[:form_object].object
+    display_value = model_object.send(field) if model_object.respond_to?(field)
+  end
   
   # Format dates and times nicely
-  formatted_value = if value.is_a?(DateTime) || value.is_a?(Time)
-    value.strftime("%B %-d, %Y - %H:%M")
-  elsif value.is_a?(Date)
-    value.strftime("%B %-d, %Y")
+  formatted_value = if display_value.is_a?(DateTime) || display_value.is_a?(Time)
+    display_value.strftime("%B %-d, %Y - %H:%M")
+  elsif display_value.is_a?(Date)
+    display_value.strftime("%B %-d, %Y")
   else
-    value
+    display_value
   end
 %>
 
