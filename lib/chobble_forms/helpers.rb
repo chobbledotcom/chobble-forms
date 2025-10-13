@@ -23,11 +23,24 @@ module ChobbleForms
       )
     end
 
+    FieldValue = T.type_alias do
+      T.nilable(T.any(
+        String,
+        Integer,
+        Float,
+        Date,
+        DateTime,
+        Time,
+        T::Boolean,
+        T.untyped
+      ))
+    end
+
     FieldSetupResult = T.type_alias do
       {
         form_object: T.untyped,
         i18n_base: String,
-        value: T.untyped,
+        value: FieldValue,
         prefilled: T::Boolean,
         field_label: String,
         field_hint: T.nilable(String),
@@ -47,7 +60,7 @@ module ChobbleForms
       build_field_setup_result(field_translations, value, prefilled)
     end
 
-    sig { params(form_object: T.untyped, field: Symbol).returns([T.untyped, T::Boolean]) }
+    sig { params(form_object: T.untyped, field: Symbol).returns([FieldValue, T::Boolean]) }
     def get_field_value_and_prefilled_status(form_object, field)
       return [nil, false] unless form_object&.object
 
@@ -195,7 +208,7 @@ module ChobbleForms
       end
     end
 
-    sig { params(model: T.untyped, field: Symbol).returns({value: T.untyped, prefilled: T::Boolean}) }
+    sig { params(model: T.untyped, field: Symbol).returns({value: FieldValue, prefilled: T::Boolean}) }
     def resolve_field_value(model, field)
       return {value: nil, prefilled: false} if field.to_s.include?("password")
 

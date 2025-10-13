@@ -5,7 +5,16 @@
   # Get value from model object automatically
   model_object = setup[:form_object].object
   value = model_object.send(field) if model_object.respond_to?(field)
+  
+  # Format dates and times nicely
+  formatted_value = if value.is_a?(DateTime) || value.is_a?(Time)
+    value.strftime("%B %-d, %Y - %H:%M")
+  elsif value.is_a?(Date)
+    value.strftime("%B %-d, %Y")
+  else
+    value
+  end
 %>
 
 <%= setup[:form_object].label field, setup[:field_label] %>
-<p><%= value %></p>
+<p><%= formatted_value %></p>
