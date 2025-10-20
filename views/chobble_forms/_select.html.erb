@@ -4,6 +4,7 @@
 
   # Form field options
   required ||= false
+  combobox = local_assigns[:combobox] || false
 
   # Options should be:
   # - For select: options_for_select array or collection_select params
@@ -21,10 +22,20 @@
 
   # Add any additional HTML attributes
   field_options[:onchange] = local_assigns[:onchange] if local_assigns[:onchange]
+  field_options[:list] = "#{field}_datalist_#{setup[:form_object].object.object_id}" if combobox
 %>
 
 <%= setup[:form_object].label field, setup[:field_label] %>
-<% if collection_select_params %>
+<% if combobox %>
+  <%= setup[:form_object].text_field field, field_options %>
+  <datalist id="<%= field_options[:list] %>">
+    <% options.each do |option| %>
+      <% value = option.is_a?(Array) ? option.last : option %>
+      <% text = option.is_a?(Array) ? option.first : option %>
+      <option value="<%= value %>"><%= text %></option>
+    <% end %>
+  </datalist>
+<% elsif collection_select_params %>
   <%= setup[:form_object].collection_select(
         field,
         collection_select_params[:collection],
