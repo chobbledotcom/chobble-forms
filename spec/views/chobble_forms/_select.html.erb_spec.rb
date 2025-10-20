@@ -24,7 +24,7 @@ RSpec.describe "chobble_forms/_select.html.erb", type: :view do
   before do
     allow(view).to receive(:form_field_setup).and_return(field_config)
     allow(mock_form).to receive(:object).and_return(mock_object)
-    allow(mock_form).to receive(:label).with(field, "Status").and_return('<label>Status</label>'.html_safe)
+    allow(mock_form).to receive(:label).with(field, "Status").and_return("<label>Status</label>".html_safe)
 
     view.instance_variable_set(:@_current_i18n_base, "test.forms")
   end
@@ -293,7 +293,7 @@ RSpec.describe "chobble_forms/_select.html.erb", type: :view do
             .and_return("<label>#{field_name.to_s.titleize}</label>".html_safe)
           allow(mock_form).to receive(:select)
             .with(field_name, options, {}, {required: false})
-            .and_return('<select></select>'.html_safe)
+            .and_return("<select></select>".html_safe)
         end
 
         it "renders correctly for #{field_name}" do
