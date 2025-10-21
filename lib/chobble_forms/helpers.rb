@@ -117,6 +117,7 @@ module ChobbleForms
     ALLOWED_LOCAL_ASSIGNS = T.let(%i[
       accept
       add_not_applicable
+      combobox
       field
       max
       min
