@@ -280,9 +280,7 @@ RSpec.describe "chobble_forms/_select.html.erb", type: :view do
   end
 
   describe "different field types" do
-    let(:different_fields) { [:manufacturer, :model, :location] }
-
-    different_fields.each do |field_name|
+    [:manufacturer, :model, :location].each do |field_name|
       context "with field #{field_name}" do
         before do
           allow(view).to receive(:form_field_setup).and_return(
