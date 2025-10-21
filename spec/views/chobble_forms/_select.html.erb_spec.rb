@@ -180,6 +180,7 @@ RSpec.describe "chobble_forms/_select.html.erb", type: :view do
       allow(mock_form).to receive(:text_field)
         .with(field, {required: false, list: "status_datalist_123"})
         .and_return('<input type="text" list="status_datalist_123" />'.html_safe)
+      allow(mock_form).to receive(:select)
     end
 
     it "renders a text field with datalist when combobox is true" do
