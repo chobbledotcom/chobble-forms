@@ -18,7 +18,7 @@
   select_options[:prompt] = prompt if prompt
 
   # Build field options
-  field_options = { required: required }.compact
+  field_options = { required: required, autocomplete: false }.compact
 
   # Add any additional HTML attributes
   field_options[:onchange] = local_assigns[:onchange] if local_assigns[:onchange]
